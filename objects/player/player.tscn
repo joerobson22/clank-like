@@ -1,3 +1,47 @@
-[gd_scene format=3 uid="uid://e3nvmpgb71ya"]
+[gd_scene load_steps=7 format=3 uid="uid://e3nvmpgb71ya"]
+
+[ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_is1l8"]
+[ext_resource type="Script" path="res://objects/player/player.gd" id="1_j1ilj"]
+[ext_resource type="Script" path="res://objects/player/sprite_manager.gd" id="2_qm8pq"]
+[ext_resource type="Script" path="res://objects/player/interaction_manager.gd" id="4_gt2mc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vuiuc"]
+radius = 64.0312
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_33q7p"]
+radius = 64.0
+height = 254.0
 
 [node name="Player" type="CharacterBody2D"]
+y_sort_enabled = true
+script = ExtResource("1_j1ilj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vuiuc")
+
+[node name="SpriteManager" type="Node2D" parent="."]
+script = ExtResource("2_qm8pq")
+
+[node name="Body" type="Node2D" parent="SpriteManager"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteManager/Body"]
+texture = ExtResource("1_is1l8")
+
+[node name="Weapon" type="Node2D" parent="SpriteManager"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteManager/Weapon"]
+position = Vector2(92, 1)
+scale = Vector2(0.40625, 0.40625)
+texture = ExtResource("1_is1l8")
+
+[node name="InteractionManager" type="Node2D" parent="."]
+script = ExtResource("4_gt2mc")
+
+[node name="WeaponArea" type="Area2D" parent="InteractionManager" groups=["Player", "PlayerWeapon"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/WeaponArea"]
+position = Vector2(63, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_33q7p")
+
+[node name="Camera2D" type="Camera2D" parent="."]

@@ -12,7 +12,15 @@ config_version=5
 
 config/name="Clank-Like"
 config/features=PackedStringArray("4.3", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://assets/misc/icon.svg"
+
+[file_customization]
+
+folder_colors={
+"res://assets/": "red",
+"res://objects/": "teal",
+"res://scenes/": "blue"
+}
 
 [rendering]
 

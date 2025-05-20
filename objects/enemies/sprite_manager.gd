@@ -14,3 +14,9 @@ func attack():
 
 func chase():
 	pass
+
+func idle():
+	pass
+
+func wander():
+	pass

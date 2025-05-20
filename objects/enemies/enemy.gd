@@ -4,15 +4,17 @@ extends CharacterBody2D
 @onready var InteractionManager = $InteractionManager
 @onready var WanderPoint = $WanderPoint
 
-var maxHealth : float = 100.0
-var health : float = maxHealth
+@export var maxHealth : float = 100.0
+@export var health : float = maxHealth
 
-var moveSpeed : float = 50.0
+@export var moveSpeed : float = 50.0
+
+@export var wanderDistance : int = 250
 
 var player = null
 var target = null
 
-var statePool = ["idle", "wandering"]
+var statePool = ["idle", "idle", "idle", "wandering"]
 var state : String = "idle"
 
 func _ready():
@@ -26,6 +28,7 @@ func _physics_process(delta):
 	
 	if direction.length() < 5 and state != "chasing":
 		target = null
+		stateRandomiser()
 		return
 	
 	velocity = direction.normalized() * moveSpeed
@@ -37,8 +40,12 @@ func stateRandomiser():
 	
 	state = statePool[randi_range(0, statePool.size() - 1)]
 	
-	await get_tree().create_timer(randf_range(2.0, 10.0)).timeout
-	stateRandomiser()
+	if state == "idle":
+		idle()
+		await get_tree().create_timer(randf_range(2.0, 10.0)).timeout
+		stateRandomiser()
+	elif state == "wandering":
+		wander()
 
 func _on_attack_range_area_entered(area):
 	if area.is_in_group("Player") and area.is_in_group("Hurtbox"):
@@ -52,12 +59,21 @@ func attack():
 func damage(attackName):
 	#take off health here and whatnot
 	#then call on sprite manager to do animation
+	state = "hurt"
 	SpriteManager.damage()
 
 func chasePlayer():
 	state = "chasing"
 	target = player
 	SpriteManager.chase()
+
+func idle():
+	SpriteManager.idle()
+
+func wander():
+	SpriteManager.wander()
+	WanderPoint.global_position = global_position + Vector2(randi_range(-wanderDistance, wanderDistance), randi_range(-wanderDistance, wanderDistance))
+	target = WanderPoint
 
 func _on_object_detection_area_entered(area):
 	if area.is_in_group("Player") and area.is_in_group("Detectable"):

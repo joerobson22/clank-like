@@ -8,13 +8,13 @@
 [node name="Player" parent="." instance=ExtResource("1_pmf8e")]
 
 [node name="Enemy" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-355, -146)
+position = Vector2(-1010, -448)
 
 [node name="Enemy2" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(338, 158)
+position = Vector2(993, 486)
 
 [node name="Enemy3" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-468, 256)
+position = Vector2(-972, 503)
 
 [node name="Enemy4" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(332, -152)
+position = Vector2(927, -414)

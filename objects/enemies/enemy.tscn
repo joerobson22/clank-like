@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://b8a7grgok21vr"]
+[gd_scene load_steps=15 format=3 uid="uid://b8a7grgok21vr"]
 
 [ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_03h4a"]
 [ext_resource type="Script" path="res://objects/enemies/enemy.gd" id="1_nijl5"]
@@ -22,6 +22,9 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_lsmra"]
+resource_name = "Attack"
+
 [sub_resource type="Animation" id="Animation_nomto"]
 resource_name = "damage"
 length = 0.3
@@ -41,8 +44,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_euvnh"]
 _data = {
-"RESET": SubResource("Animation_g6fyl"),
-"damage": SubResource("Animation_nomto")
+"Attack": SubResource("Animation_lsmra"),
+"Hurt": SubResource("Animation_nomto"),
+"RESET": SubResource("Animation_g6fyl")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_if6el"]
@@ -57,7 +61,12 @@ radius = 66.0076
 [sub_resource type="CircleShape2D" id="CircleShape2D_afwpu"]
 radius = 66.3702
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_3k3t8"]
+radius = 112.285
+
 [node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 4
 script = ExtResource("1_nijl5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -87,25 +96,41 @@ libraries = {
 }
 
 [node name="InteractionManager" type="Node2D" parent="."]
-visible = false
 script = ExtResource("4_kvpgo")
 
 [node name="ObjectDetection" type="Area2D" parent="InteractionManager" groups=["Detector", "Enemy"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ObjectDetection"]
 shape = SubResource("CircleShape2D_if6el")
 
 [node name="Hitbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hitbox"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hitbox"]
 shape = SubResource("CircleShape2D_doyfs")
 
 [node name="Hurtbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hurtbox"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hurtbox"]
 shape = SubResource("CircleShape2D_17gkx")
 
 [node name="Detectable" type="Area2D" parent="InteractionManager" groups=["Detectable", "Enemy"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Detectable"]
 shape = SubResource("CircleShape2D_afwpu")
+
+[node name="AttackRange" type="Area2D" parent="InteractionManager" groups=["Enemy"]]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/AttackRange"]
+shape = SubResource("CircleShape2D_3k3t8")
+
+[node name="WanderPoint" type="Node2D" parent="."]
+
+[connection signal="animation_finished" from="SpriteManager/FullAP" to="." method="_on_full_ap_animation_finished"]
+[connection signal="area_entered" from="InteractionManager/ObjectDetection" to="." method="_on_object_detection_area_entered"]
+[connection signal="area_exited" from="InteractionManager/ObjectDetection" to="." method="_on_object_detection_area_exited"]
+[connection signal="area_entered" from="InteractionManager/AttackRange" to="." method="_on_attack_range_area_entered"]

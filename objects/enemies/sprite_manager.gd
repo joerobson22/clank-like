@@ -7,4 +7,10 @@ extends Node2D
 @onready var ExtraAP = $Extras/ExtraAP
 
 func damage():
-	FullAP.play("damage")
+	FullAP.play("Hurt")
+
+func attack():
+	FullAP.play("Attack")
+
+func chase():
+	pass

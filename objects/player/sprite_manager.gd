@@ -9,8 +9,10 @@ extends Node2D
 func attack(attackNum):
 	var baseAttackString = player.weaponName + "BasicAttack" + attackNum
 	var fullAttackString = baseAttackString + "_" + player.direction
+	
 	player.get_node("InteractionManager/Hitbox/DamageActivator/AnimationPlayer").play(baseAttackString)
 	WeaponAP.play(fullAttackString)
+	BodyAP.play(fullAttackString)
 
 func getDirection(inputVector : Vector2) -> String:
 	var newDirection = ""
@@ -35,3 +37,6 @@ func _on_weapon_ap_animation_finished(anim_name):
 		player.states["attacking"] = false
 		#print("attack complete")
 		player.damageEnemies(anim_name)
+
+func _on_body_ap_animation_finished(anim_name):
+	pass # Replace with function body.

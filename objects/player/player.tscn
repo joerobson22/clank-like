@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://e3nvmpgb71ya"]
+[gd_scene load_steps=33 format=3 uid="uid://e3nvmpgb71ya"]
 
 [ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_is1l8"]
 [ext_resource type="Script" path="res://objects/player/player.gd" id="1_j1ilj"]
@@ -7,6 +7,30 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vuiuc"]
 radius = 64.0312
+
+[sub_resource type="Animation" id="Animation_dptcb"]
+resource_name = "SwordBasicAttack1_STRAIGHT"
+
+[sub_resource type="Animation" id="Animation_hd0nm"]
+resource_name = "SwordBasicAttack1_STRAIGHTUP"
+
+[sub_resource type="Animation" id="Animation_orglr"]
+resource_name = "SwordBasicAttack1_STRAIGHTDOWN"
+
+[sub_resource type="Animation" id="Animation_2bxd4"]
+resource_name = "SwordBasicAttack1_DIAGONALUP"
+
+[sub_resource type="Animation" id="Animation_7nak5"]
+resource_name = "SwordBasicAttack1_DIAGONALDOWN"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ixi0k"]
+_data = {
+"SwordBasicAttack1_DIAGONALDOWN": SubResource("Animation_7nak5"),
+"SwordBasicAttack1_DIAGONALUP": SubResource("Animation_2bxd4"),
+"SwordBasicAttack1_STRAIGHT": SubResource("Animation_dptcb"),
+"SwordBasicAttack1_STRAIGHTDOWN": SubResource("Animation_orglr"),
+"SwordBasicAttack1_STRAIGHTUP": SubResource("Animation_hd0nm")
+}
 
 [sub_resource type="Animation" id="Animation_l0c8d"]
 length = 0.001
@@ -348,6 +372,7 @@ radius = 66.1891
 
 [node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
+collision_mask = 4
 script = ExtResource("1_j1ilj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -362,6 +387,9 @@ script = ExtResource("2_qm8pq")
 texture = ExtResource("1_is1l8")
 
 [node name="BodyAP" type="AnimationPlayer" parent="SpriteManager/Body"]
+libraries = {
+"": SubResource("AnimationLibrary_ixi0k")
+}
 
 [node name="Weapon" type="Node2D" parent="SpriteManager"]
 
@@ -381,6 +409,7 @@ libraries = {
 script = ExtResource("4_gt2mc")
 
 [node name="Hitbox" type="Area2D" parent="InteractionManager" groups=["Hitbox", "Player"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hitbox"]
 position = Vector2(63, 0)
@@ -416,7 +445,9 @@ visible = false
 shape = SubResource("CircleShape2D_pbsry")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
 
+[connection signal="animation_finished" from="SpriteManager/Body/BodyAP" to="SpriteManager" method="_on_body_ap_animation_finished"]
 [connection signal="animation_finished" from="SpriteManager/Weapon/WeaponAP" to="SpriteManager" method="_on_weapon_ap_animation_finished"]
 [connection signal="animation_finished" from="SpriteManager/FullAP" to="SpriteManager" method="_on_full_ap_animation_finished"]
 [connection signal="area_entered" from="InteractionManager/Hitbox" to="InteractionManager" method="_on_hitbox_area_entered"]

@@ -32,6 +32,6 @@ func _on_full_ap_animation_finished(anim_name):
 func _on_weapon_ap_animation_finished(anim_name):
 	#print(anim_name)
 	if anim_name.find("Attack") != -1:
-		player.attacking = false
+		player.states["attacking"] = false
 		#print("attack complete")
 		player.damageEnemies(anim_name)

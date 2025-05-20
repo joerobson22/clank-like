@@ -4,17 +4,23 @@ extends CharacterBody2D
 @onready var InteractionManager = $InteractionManager
 
 @export var moveSpeed : float = 250.0
-@export var lungeDistance : float = 10.0
+
+@export var lungeSpeed : float = 50.0
+@export var lungeDuration : float = 0.1
+
 @export var dodgeSpeed : float = 500.0
 @export var dodgeDuration : float = 0.25
 @export var dodgeCooldown : float = 0.25
 
 var attackNum = 1
 var numAttacks = 1
-var attacking : bool = false
 
-var dodging : bool = false
-var canDodge : bool = true
+var states = {
+	"attacking" : false,
+	"canAttack" : true,
+	"dodging" : false,
+	"canDodge" : true
+}
 
 var lastInputVector : Vector2 = Vector2.RIGHT
 var direction = "STRAIGHT"
@@ -25,11 +31,12 @@ func _physics_process(delta):
 	motion(delta)
 
 func motion(delta):
-	if attacking:
+	if states["attacking"]:
+		dash(lungeSpeed)
 		return
 	
-	if dodging:
-		dodge()
+	if states["dodging"]:
+		dash(dodgeSpeed)
 		return
 	
 	var inputVector = Vector2(
@@ -44,31 +51,28 @@ func motion(delta):
 		velocity = inputVector * moveSpeed
 		move_and_slide()
 	
-	if Input.is_action_just_pressed("space") and canDodge:
-		startDodge()
-		dodging = true
-		canDodge = false
+	if Input.is_action_just_pressed("space") and states["canDodge"]:
+		startDash(dodgeSpeed, dodgeDuration, dodgeCooldown, "dodging", "canDodge")
 
 func attack():
-	attacking = true
-	lunge()
+	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack")
 	#play attack animation
 	SpriteManager.attack(type_convert(attackNum, TYPE_STRING))
 	attackNum += 1
 
-func lunge():
-	move_and_collide(lastInputVector.normalized() * lungeDistance)
-
-func dodge():
-	velocity = lastInputVector.normalized() * dodgeSpeed
+func dash(speed):
+	velocity = lastInputVector.normalized() * speed
 	move_and_slide()
 
-func startDodge():
-	dodge()
-	await get_tree().create_timer(dodgeDuration).timeout
-	dodging = false
-	await get_tree().create_timer(dodgeCooldown).timeout
-	canDodge = true
+func startDash(speed, duration, cooldown, actionName, actionStatus):
+	states[actionName] = true
+	states[actionStatus] = false
+	
+	await get_tree().create_timer(duration).timeout
+	states[actionName] = false
+	
+	await get_tree().create_timer(cooldown).timeout
+	states[actionStatus] = true
 
 func damageEnemies(attackName): #in the future, may also pass weapon, crit chance, other buffs
 	for e in InteractionManager.enemyList:

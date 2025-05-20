@@ -1,0 +1,111 @@
+[gd_scene load_steps=13 format=3 uid="uid://b8a7grgok21vr"]
+
+[ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_03h4a"]
+[ext_resource type="Script" path="res://objects/enemies/enemy.gd" id="1_nijl5"]
+[ext_resource type="Script" path="res://objects/enemies/sprite_manager.gd" id="2_ipov1"]
+[ext_resource type="Script" path="res://objects/enemies/interaction_manager.gd" id="4_kvpgo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x3adi"]
+
+[sub_resource type="Animation" id="Animation_g6fyl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_nomto"]
+resource_name = "damage"
+length = 0.3
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_euvnh"]
+_data = {
+"RESET": SubResource("Animation_g6fyl"),
+"damage": SubResource("Animation_nomto")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_if6el"]
+radius = 429.596
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_doyfs"]
+radius = 102.122
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_17gkx"]
+radius = 66.0076
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_afwpu"]
+radius = 66.3702
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_nijl5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_x3adi")
+
+[node name="SpriteManager" type="Node2D" parent="."]
+script = ExtResource("2_ipov1")
+
+[node name="Body" type="Node2D" parent="SpriteManager"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteManager/Body"]
+texture = ExtResource("1_03h4a")
+
+[node name="BodyAP" type="AnimationPlayer" parent="SpriteManager/Body"]
+
+[node name="Extras" type="Node2D" parent="SpriteManager"]
+
+[node name="Sprite2D" type="Sprite2D" parent="SpriteManager/Extras"]
+texture = ExtResource("1_03h4a")
+
+[node name="ExtraAP" type="AnimationPlayer" parent="SpriteManager/Extras"]
+
+[node name="FullAP" type="AnimationPlayer" parent="SpriteManager"]
+libraries = {
+"": SubResource("AnimationLibrary_euvnh")
+}
+
+[node name="InteractionManager" type="Node2D" parent="."]
+visible = false
+script = ExtResource("4_kvpgo")
+
+[node name="ObjectDetection" type="Area2D" parent="InteractionManager" groups=["Detector", "Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ObjectDetection"]
+shape = SubResource("CircleShape2D_if6el")
+
+[node name="Hitbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hitbox"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hitbox"]
+shape = SubResource("CircleShape2D_doyfs")
+
+[node name="Hurtbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hurtbox"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hurtbox"]
+shape = SubResource("CircleShape2D_17gkx")
+
+[node name="Detectable" type="Area2D" parent="InteractionManager" groups=["Detectable", "Enemy"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Detectable"]
+shape = SubResource("CircleShape2D_afwpu")

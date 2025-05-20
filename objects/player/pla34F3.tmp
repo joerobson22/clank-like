@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://e3nvmpgb71ya"]
+[gd_scene load_steps=23 format=3 uid="uid://e3nvmpgb71ya"]
 
 [ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_is1l8"]
 [ext_resource type="Script" path="res://objects/player/player.gd" id="1_j1ilj"]
@@ -25,8 +25,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_u620j"]
 resource_name = "BasicAttack1_DIAGONALDOWN"
-length = 0.05
-step = 0.05
+length = 0.25
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -34,58 +33,7 @@ tracks/0/path = NodePath("Sprite2D:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.28319]
-}
-
-[sub_resource type="Animation" id="Animation_m45ic"]
-resource_name = "BasicAttack1_DIAGONALUP"
-length = 0.05
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.28319]
-}
-
-[sub_resource type="Animation" id="Animation_f8en8"]
-resource_name = "BasicAttack1_STRAIGHT"
-length = 0.05
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.28319]
-}
-
-[sub_resource type="Animation" id="Animation_e55t1"]
-resource_name = "BasicAttack1_STRAIGHTDOWN"
-length = 0.05
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05),
+"times": PackedFloat32Array(0, 0.233333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 6.28319]
@@ -93,8 +41,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_gwm5r"]
 resource_name = "BasicAttack1_STRAIGHTUP"
-length = 0.05
-step = 0.05
+length = 0.25
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -102,7 +49,55 @@ tracks/0/path = NodePath("Sprite2D:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05),
+"times": PackedFloat32Array(0, 0.233333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_e55t1"]
+resource_name = "BasicAttack1_STRAIGHTDOWN"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.233333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_f8en8"]
+resource_name = "BasicAttack1_STRAIGHT"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.233333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_m45ic"]
+resource_name = "BasicAttack1_DIAGONALUP"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.233333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 6.28319]
@@ -122,8 +117,8 @@ _data = {
 radius = 64.0
 height = 254.0
 
-[sub_resource type="Animation" id="Animation_f8dn7"]
-resource_name = "DIAGONALDOWN"
+[sub_resource type="Animation" id="Animation_oboxt"]
+resource_name = "STRAIGHT"
 length = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -135,7 +130,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [-0.785398]
+"values": [1.5708]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -147,35 +142,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(46, 48)]
-}
-
-[sub_resource type="Animation" id="Animation_nbwtn"]
-resource_name = "DIAGONALUP"
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("CollisionShape2D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.785398]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(47, -46)]
+"values": [Vector2(63, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_ajbup"]
@@ -205,8 +172,8 @@ tracks/1/keys = {
 "values": [Vector2(63, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_oboxt"]
-resource_name = "STRAIGHT"
+[sub_resource type="Animation" id="Animation_nbwtn"]
+resource_name = "DIAGONALUP"
 length = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -218,7 +185,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.5708]
+"values": [0.785398]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -230,7 +197,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(63, 0)]
+"values": [Vector2(47, -46)]
 }
 
 [sub_resource type="Animation" id="Animation_b7c75"]
@@ -289,6 +256,34 @@ tracks/1/keys = {
 "values": [Vector2(0, -67)]
 }
 
+[sub_resource type="Animation" id="Animation_f8dn7"]
+resource_name = "DIAGONALDOWN"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.785398]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(46, 48)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_inw5e"]
 _data = {
 "DIAGONALDOWN": SubResource("Animation_f8dn7"),
@@ -297,47 +292,6 @@ _data = {
 "STRAIGHT": SubResource("Animation_oboxt"),
 "STRAIGHTDOWN": SubResource("Animation_b7c75"),
 "STRAIGHTUP": SubResource("Animation_24t83")
-}
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_6evht"]
-radius = 44.0114
-
-[sub_resource type="Animation" id="Animation_h8ony"]
-resource_name = "SwordBasicAttack1"
-length = 0.2
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("CollisionShape2D:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [true, false, true]
-}
-
-[sub_resource type="Animation" id="Animation_wirqc"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("CollisionShape2D:disabled")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_vrayk"]
-_data = {
-"RESET": SubResource("Animation_wirqc"),
-"SwordBasicAttack1": SubResource("Animation_h8ony")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1kuja"]
@@ -390,17 +344,6 @@ shape = SubResource("CapsuleShape2D_33q7p")
 [node name="DirectionAP" type="AnimationPlayer" parent="InteractionManager/Hitbox"]
 libraries = {
 "": SubResource("AnimationLibrary_inw5e")
-}
-
-[node name="DamageActivator" type="Area2D" parent="InteractionManager/Hitbox" groups=["DamageActivator", "Player"]]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hitbox/DamageActivator"]
-shape = SubResource("CircleShape2D_6evht")
-disabled = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="InteractionManager/Hitbox/DamageActivator"]
-libraries = {
-"": SubResource("AnimationLibrary_vrayk")
 }
 
 [node name="Hurtbox" type="Area2D" parent="InteractionManager" groups=["Hurtbox", "Player"]]

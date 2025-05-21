@@ -76,6 +76,8 @@ func startDash(speed, duration, cooldown, actionName, actionStatus):
 	states[actionName] = true
 	states[actionStatus] = false
 	
+	dash(speed)
+	
 	await get_tree().create_timer(duration).timeout
 	states[actionName] = false
 	
@@ -99,7 +101,7 @@ func damageEnemies(attackName): #in the future, may also pass weapon, crit chanc
 func interact():
 	pass
 
-#DIRECTION CONTROL ------------------------------------------------------------------------------------
+#DIRECTION CONTROL ----------------------------------------------------------------------------------
 
 func flip(inputVector):
 	direction = SpriteManager.getDirection(inputVector)

@@ -12,18 +12,25 @@ var ENEMYTYPE : String = ""
 var maxHealth : float = 100.0
 var health : float = maxHealth
 #movement
-var moveSpeed : float = 50.0
-var chaseSpeed : float = 100.0
-var maxWanderDistance : int = 250
+var moveSpeed : float = 150.0
+var chaseSpeed : float = 200.0
+var fleeSpeed : float = -300.0
+var maxWanderDistance : int = 500
 #attack information
 var attackSpeed : float
 var attackRange : float
 var attackCooldown : float
+#behaviour
+var minWait : float = 0.25
+var maxWait : float = 3.0
+var willBackOff : bool = true
+var minFleeDistance : float = 1000.0
 
 #TARGET POINTS
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
 var wanderPoint = null
 var attackPoint = null
+var levelBounds = [Vector2(-1000, -1000), Vector2(1000, 1000)] 
 
 #PHYSICS ATTRIBUTES
 var speed : float = 0.0
@@ -39,12 +46,13 @@ var canAttack : bool = true
 
 #RECORDS FOR ATTRIBUTES DEPENDENT ON ATTACK TYPE
 var attackDict = {
-	"Lunge" : [500.0, 3.0],
-	"Stationary" : [100.0, 0.25]
+			# 		range  	cooldown  	speed
+	"Lunge" : [		500.0, 	3.0, 		1000.0],
+	"Stationary" : [100.0, 	0.25, 		0.0]
 }
 
 var attackMethod : String = ""
-var attackMethods = ["Stationary", "Lunge"]
+var attackMethods = ["Lunge", "Stationary"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -55,8 +63,10 @@ func _ready():
 	get_tree().root.call_deferred("add_child", attackPoint)
 	
 	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
-	attackRange = attackDict[attackMethod][0]
-	attackCooldown = attackDict[attackMethod][1]
+	var attackInfo = attackDict[attackMethod]
+	attackRange = attackInfo[0]
+	attackCooldown = attackInfo[1]
+	attackSpeed = attackInfo[2]
 	
 	stateRandomiser()
 
@@ -75,10 +85,13 @@ func _physics_process(delta):
 		target = null
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
-	if direction.length() < 5 and state != "chasing" and state != "attacking":
+	if direction.length() < 5 and state != "chasing" and state != "attacking" and state != "backing off":
 		target = null
 		stateRandomiser()
 		return
+	
+	if direction.length() > minFleeDistance and state == "backing off":
+		resetFocus()
 	
 	velocity = direction.normalized() * speed
 	move_and_slide()
@@ -110,6 +123,7 @@ func damage(attackName):
 	#take off health here and whatnot
 	#then call on sprite manager to do animation
 	state = "hurt"
+	canAttack = true
 	SpriteManager.damage(ENEMYTYPE)
 
 #BEHAVIOUR FUNCTIONS -----------------------------------------------------------------------------
@@ -122,12 +136,15 @@ func stateRandomiser():
 	
 	if state == "idle":
 		idle()
-		await get_tree().create_timer(randf_range(1.0, 5.0)).timeout
+		await get_tree().create_timer(randf_range(minWait, maxWait)).timeout
 		stateRandomiser()
 	elif state == "wandering":
 		wander()
 
 func chasePlayer():
+	if state == "attacking":
+		return
+	
 	speed = chaseSpeed
 	state = "chasing"
 	target = player
@@ -139,7 +156,10 @@ func idle():
 func wander():
 	speed = moveSpeed
 	SpriteManager.wander(ENEMYTYPE)
-	wanderPoint.global_position = global_position + Vector2(randi_range(-maxWanderDistance, maxWanderDistance), randi_range(-maxWanderDistance, maxWanderDistance))
+	var valid : bool = false
+	while !valid:
+		wanderPoint.global_position = global_position + Vector2(randi_range(-maxWanderDistance, maxWanderDistance), randi_range(-maxWanderDistance, maxWanderDistance))
+		valid = inBounds(wanderPoint.global_position.x, wanderPoint.global_position.y)
 	target = wanderPoint
 
 func resetFocus():
@@ -149,8 +169,19 @@ func resetFocus():
 		chasePlayer()
 
 func cooldownAttack():
+	if willBackOff:
+		state = "backing off"
+		target = player
+		speed = fleeSpeed
+	else:
+		resetFocus()
 	await get_tree().create_timer(attackCooldown).timeout
 	canAttack = true
+	resetFocus()
+
+#USEFUL FUNCTIONS
+func inBounds(x, y) -> bool:
+	return (x >= levelBounds[0].x and y >= levelBounds[0].y and x <= levelBounds[1].x and y <= levelBounds[1].y)
 
 #ANIMATION STATE MACHINE probably could've used an animation tree but oh well ------------------------------------------------
 
@@ -159,11 +190,10 @@ func _on_full_ap_animation_finished(anim_name):
 		resetFocus()
 	
 	elif anim_name.find("FinishAttack") != -1:
-		resetFocus()
 		cooldownAttack()
 	
 	elif anim_name.find("StationaryAttack") != -1:
-		SpriteManager.finishAttack()
+		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	elif anim_name.find("LungeChargeup") != -1:
 		lungeAttack()

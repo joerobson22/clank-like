@@ -1,32 +1,43 @@
 extends CharacterBody2D
 
+#CHILDREN
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
 
+#ENEMY TYPE
 var ENEMYTYPE : String = ""
 
+#ENEMY ATTRIBUTES
+#health
 var maxHealth : float = 100.0
 var health : float = maxHealth
+#movement
 var moveSpeed : float = 50.0
 var chaseSpeed : float = 100.0
-var attackSpeed : float = 1000.0
-var attackRadius : float = 500.0
-var attackCooldown : float = 3.0
 var maxWanderDistance : int = 250
+#attack information
+var attackSpeed : float
+var attackRange : float
+var attackCooldown : float
 
+#TARGET POINTS
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
 var wanderPoint = null
 var attackPoint = null
 
+#PHYSICS ATTRIBUTES
 var speed : float = 0.0
 
+#NODE REFERENCES
 var player = null
 var target = null
 
+#STATE MACHINE VARIABLES
 var statePool = ["idle", "wandering"]
 var state : String = "idle"
 var canAttack : bool = true
 
+#RECORDS FOR ATTRIBUTES DEPENDENT ON ATTACK TYPE
 var attackDict = {
 	"Lunge" : [500.0, 3.0],
 	"Stationary" : [100.0, 0.25]
@@ -44,7 +55,7 @@ func _ready():
 	get_tree().root.call_deferred("add_child", attackPoint)
 	
 	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
-	attackRadius = attackDict[attackMethod][0]
+	attackRange = attackDict[attackMethod][0]
 	attackCooldown = attackDict[attackMethod][1]
 	
 	stateRandomiser()
@@ -57,7 +68,7 @@ func _physics_process(delta):
 	
 	var direction = target.global_position - global_position
 	
-	if direction.length() < attackRadius and state == "chasing" and canAttack:
+	if direction.length() < attackRange and state == "chasing" and canAttack:
 		attack()
 	
 	if direction.length() < 10 and state == "attacking":

@@ -1,20 +1,26 @@
 extends CharacterBody2D
 
+#CHILDREN
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
 
+#ATTRIBUTES
+#moving
 @export var moveSpeed : float = 250.0
-
+#lunging
 @export var lungeSpeed : float = 50.0
 @export var lungeDuration : float = 0.1
-
+#dodging
 @export var dodgeSpeed : float = 750.0
 @export var dodgeDuration : float = 0.25
 @export var dodgeCooldown : float = 0.25
 
+#ATTACK INFORMATION
 var attackNum = 1
-var numAttacks = 1
+var numAttacks
+var weaponName = "Sword"
 
+#STATE MACHINE VARIABLES
 var states = {
 	"attacking" : false,
 	"canAttack" : true,
@@ -22,11 +28,17 @@ var states = {
 	"canDodge" : true
 }
 
+#PHYSICS INFORMATION
 var lastInputVector : Vector2 = Vector2.RIGHT
 var direction = "STRAIGHT"
 
-var weaponName = "Sword"
+#INSTANTIATION ------------------------------------------------------------------------------------
+func _ready():
+	if weaponName == "Sword":
+		numAttacks = 1
+		#set sprite etc
 
+#PHYSICS PROCESS ------------------------------------------------------------------------------------
 func _physics_process(delta):
 	if states["attacking"]:
 		dash(lungeSpeed)
@@ -37,6 +49,8 @@ func _physics_process(delta):
 		return
 	
 	motion(delta)
+
+#MOVEMENT ------------------------------------------------------------------------------------
 
 func motion(delta):
 	var inputVector = Vector2(
@@ -54,12 +68,6 @@ func motion(delta):
 	if Input.is_action_just_pressed("space") and states["canDodge"]:
 		startDash(dodgeSpeed, dodgeDuration, dodgeCooldown, "dodging", "canDodge")
 
-func attack():
-	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack")
-	#play attack animation
-	SpriteManager.attack(type_convert(attackNum, TYPE_STRING))
-	attackNum += 1
-
 func dash(speed):
 	velocity = lastInputVector.normalized() * speed
 	move_and_slide()
@@ -74,13 +82,24 @@ func startDash(speed, duration, cooldown, actionName, actionStatus):
 	await get_tree().create_timer(cooldown).timeout
 	states[actionStatus] = true
 
+#ATTACKING ------------------------------------------------------------------------------------
+
+func attack():
+	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack")
+	#play attack animation
+	SpriteManager.attack(type_convert(attackNum, TYPE_STRING))
+	attackNum += 1
+
 func damageEnemies(attackName): #in the future, may also pass weapon, crit chance, other buffs
 	for e in InteractionManager.enemyList:
 		e.damage(attackName)
 	InteractionManager.cooldown()
 
+#INTERACTIONS ------------------------------------------------------------------------------------
 func interact():
 	pass
+
+#DIRECTION CONTROL ------------------------------------------------------------------------------------
 
 func flip(inputVector):
 	direction = SpriteManager.getDirection(inputVector)

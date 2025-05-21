@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://dg273p8lohjlv"]
+
+[ext_resource type="Script" path="res://objects/misc/projectile.gd" id="1_0dwiu"]
+[ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_vpapg"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ndl31"]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mkmb3"]
+radius = 7.07107
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_waeo3"]
+radius = 8.0
+
+[node name="Projectile" type="RigidBody2D"]
+collision_layer = 8
+collision_mask = 4
+physics_material_override = SubResource("PhysicsMaterial_ndl31")
+gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 4
+script = ExtResource("1_0dwiu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_mkmb3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_vpapg")
+
+[node name="Hitbox" type="Area2D" parent="." groups=["Hitbox"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_waeo3")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

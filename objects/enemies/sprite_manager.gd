@@ -12,6 +12,9 @@ func damage(ENEMYTYPE):
 func chargeLunge(ENEMYTYPE):
 	FullAP.play(ENEMYTYPE + "LungeChargeup")
 
+func chargeRanged(ENEMYTYPE):
+	FullAP.play(ENEMYTYPE + "RangedChargeup")
+
 func attack(attackMethod, ENEMYTYPE):
 	FullAP.play(ENEMYTYPE + attackMethod)
 

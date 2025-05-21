@@ -20,12 +20,15 @@ var attackNum = 1
 var numAttacks
 var weaponName = "Sword"
 
+var projectileScene = preload("res://objects/misc/projectile.tscn")
+
 #STATE MACHINE VARIABLES
 var states = {
 	"attacking" : false,
 	"canAttack" : true,
 	"dodging" : false,
-	"canDodge" : true
+	"canDodge" : true,
+	"invincible" : false
 }
 
 #PHYSICS INFORMATION
@@ -40,6 +43,8 @@ func _ready():
 
 #PHYSICS PROCESS ------------------------------------------------------------------------------------
 func _physics_process(delta):
+	states["invincible"] = states["dodging"]
+	
 	if states["attacking"]:
 		dash(lungeSpeed)
 		return
@@ -97,6 +102,12 @@ func damageEnemies(attackName): #in the future, may also pass weapon, crit chanc
 		e.damage(attackName)
 	InteractionManager.cooldown()
 
+#HURTING -------------------------------------------------------------------------------------------
+
+func damage(dam):
+	if isInvincible():
+		return
+
 #INTERACTIONS ------------------------------------------------------------------------------------
 func interact():
 	pass
@@ -118,3 +129,8 @@ func flip(inputVector):
 	
 	SpriteManager.scale.x = sc
 	InteractionManager.scale.x = sc
+
+#GETTERS --------------------------------------------------------------------------------------------
+
+func isInvincible() -> bool:
+	return states["invincible"]

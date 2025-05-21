@@ -24,7 +24,7 @@ var attackCooldown : float
 var minWait : float = 0.25
 var maxWait : float = 3.0
 var willBackOff : bool = true
-var minFleeDistance : float = 1000.0
+var minFleeDistance : float = 750.0
 
 #TARGET POINTS
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
@@ -48,11 +48,14 @@ var canAttack : bool = true
 var attackDict = {
 			# 		range  	cooldown  	speed
 	"Lunge" : [		500.0, 	3.0, 		1000.0],
-	"Stationary" : [100.0, 	0.25, 		0.0]
+	"Stationary" : [100.0, 	0.25, 		0.0],
+	"Ranged" : [	1000.0,	5.0,		1000.0]
 }
 
+var projectileScene = preload("res://objects/misc/projectile.tscn")
+
 var attackMethod : String = ""
-var attackMethods = ["Lunge", "Stationary"]
+var attackMethods = ["Ranged", "Lunge", "Stationary"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -81,6 +84,9 @@ func _physics_process(delta):
 	if direction.length() < attackRange and state == "chasing" and canAttack:
 		attack()
 	
+	if attackMethod == "Ranged" and direction.length() < attackRange:
+		return
+	
 	if direction.length() < 10 and state == "attacking":
 		target = null
 		SpriteManager.finishAttack(ENEMYTYPE)
@@ -102,11 +108,16 @@ func attack():
 	canAttack = false
 	state = "attacking"
 	if attackMethod == "Lunge":
-		SpriteManager.chargeLunge(ENEMYTYPE)
+		chargeLunge()
 	
 	elif attackMethod == "Stationary":
 		stationaryAttack()
-		SpriteManager.attack("StationaryAttack", ENEMYTYPE)
+	
+	elif attackMethod == "Ranged":
+		chargeRanged()
+
+func chargeLunge():
+	SpriteManager.chargeLunge(ENEMYTYPE)
 
 func lungeAttack():
 	SpriteManager.attack("LungeAttack", ENEMYTYPE)
@@ -115,7 +126,31 @@ func lungeAttack():
 	target = attackPoint
 
 func stationaryAttack():
+	SpriteManager.attack("StationaryAttack", ENEMYTYPE)
 	target = null
+
+func chargeRanged():
+	target = null
+	SpriteManager.chargeRanged(ENEMYTYPE)
+
+func rangedAttack():
+	if player == null:
+		resetFocus()
+		return
+	SpriteManager.attack("RangedAttack", ENEMYTYPE)
+	var direction : Vector2 = (player.global_position - global_position).normalized()
+	spawnProjectile(direction)
+
+func spawnProjectile(direction):
+	var newProjectile = projectileScene.instantiate()
+	newProjectile.targetGroup = "Player"
+	newProjectile.friendlyGroup = "Enemy"
+	newProjectile.global_position = global_position
+	
+	get_tree().root.call_deferred("add_child", newProjectile)
+	
+	await get_tree().process_frame
+	newProjectile.linear_velocity = direction * attackSpeed
 
 #DAMAGE AND DEATH FUNCTIONS ------------------------------------------------------------------------
 
@@ -192,8 +227,14 @@ func _on_full_ap_animation_finished(anim_name):
 	elif anim_name.find("FinishAttack") != -1:
 		cooldownAttack()
 	
-	elif anim_name.find("StationaryAttack") != -1:
+	elif anim_name.find("StationaryAttack") != -1 or anim_name.find("RangedAttack") != -1:
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	elif anim_name.find("LungeChargeup") != -1:
 		lungeAttack()
+	
+	elif anim_name.find("RangedChargeup") != -1:
+		rangedAttack()
+
+func isInvincible() -> bool:
+	return false

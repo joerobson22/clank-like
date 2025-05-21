@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b8a7grgok21vr"]
+[gd_scene load_steps=17 format=3 uid="uid://b8a7grgok21vr"]
 
 [ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_03h4a"]
 [ext_resource type="Script" path="res://objects/enemies/enemy.gd" id="1_nijl5"]
@@ -7,8 +7,8 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x3adi"]
 
-[sub_resource type="Animation" id="Animation_lsmra"]
-resource_name = "Attack"
+[sub_resource type="Animation" id="Animation_88avq"]
+resource_name = "FinishAttack"
 
 [sub_resource type="Animation" id="Animation_nomto"]
 resource_name = "damage"
@@ -42,15 +42,22 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_88avq"]
-resource_name = "FinishAttack"
+[sub_resource type="Animation" id="Animation_lsmra"]
+resource_name = "Attack"
+
+[sub_resource type="Animation" id="Animation_ggtl2"]
+
+[sub_resource type="Animation" id="Animation_5jt1r"]
+resource_name = "LungeChargeup"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_euvnh"]
 _data = {
-"Attack": SubResource("Animation_lsmra"),
 "FinishAttack": SubResource("Animation_88avq"),
 "Hurt": SubResource("Animation_nomto"),
-"RESET": SubResource("Animation_g6fyl")
+"LungeAttack": SubResource("Animation_ggtl2"),
+"LungeChargeup": SubResource("Animation_5jt1r"),
+"RESET": SubResource("Animation_g6fyl"),
+"StationaryAttack": SubResource("Animation_lsmra")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_if6el"]
@@ -124,5 +131,5 @@ visible = false
 shape = SubResource("CircleShape2D_afwpu")
 
 [connection signal="animation_finished" from="SpriteManager/FullAP" to="." method="_on_full_ap_animation_finished"]
-[connection signal="area_entered" from="InteractionManager/ObjectDetection" to="." method="_on_object_detection_area_entered"]
-[connection signal="area_exited" from="InteractionManager/ObjectDetection" to="." method="_on_object_detection_area_exited"]
+[connection signal="area_entered" from="InteractionManager/ObjectDetection" to="InteractionManager" method="_on_object_detection_area_entered"]
+[connection signal="area_exited" from="InteractionManager/ObjectDetection" to="InteractionManager" method="_on_object_detection_area_exited"]

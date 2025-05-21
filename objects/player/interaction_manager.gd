@@ -32,14 +32,14 @@ func _on_hitbox_area_entered(area):
 	if area.is_in_group("Enemy") and area.is_in_group("Hurtbox"):
 		if enemyList.find(area.get_parent()) == -1:
 			#print("added")
-			enemyList.append(area.get_parent().enemy)
+			enemyList.append(area.get_parent().parent)
 	elif area.is_in_group("Player") and area.is_in_group("DamageActivator"):
 		player.damageEnemies(get_node("Hitbox/DamageActivator/AnimationPlayer").current_animation)
 
 func _on_hitbox_area_exited(area):
 	if area.is_in_group("Enemy") and area.is_in_group("Hurtbox"):
 		#print("removed")
-		enemyList.erase(area.get_parent().enemy)
+		enemyList.erase(area.get_parent().parent)
 
 func _on_hurtbox_area_entered(area):
 	pass

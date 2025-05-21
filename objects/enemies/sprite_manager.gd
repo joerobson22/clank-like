@@ -6,20 +6,23 @@ extends Node2D
 @onready var BodyAP = $Body/BodyAP
 @onready var ExtraAP = $Extras/ExtraAP
 
-func damage():
-	FullAP.play("Hurt")
+func damage(ENEMYTYPE):
+	FullAP.play(ENEMYTYPE + "Hurt")
 
-func attack(attackMethod):
-	FullAP.play("Attack")
+func chargeLunge(ENEMYTYPE):
+	FullAP.play(ENEMYTYPE + "LungeChargeup")
 
-func finishAttack():
-	FullAP.play("FinishAttack")
+func attack(attackMethod, ENEMYTYPE):
+	FullAP.play(ENEMYTYPE + attackMethod)
 
-func chase():
+func finishAttack(ENEMYTYPE):
+	FullAP.play(ENEMYTYPE + "FinishAttack")
+
+func chase(ENEMYTYPE):
 	pass
 
-func idle():
+func idle(ENEMYTYPE):
 	pass
 
-func wander():
+func wander(ENEMYTYPE):
 	pass

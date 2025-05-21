@@ -3,15 +3,16 @@ extends CharacterBody2D
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
 
-@export var maxHealth : float = 100.0
-@export var health : float = maxHealth
-@export var moveSpeed : float = 50.0
-@export var chaseSpeed : float = 100.0
-@export var attackSpeed : float = 1000.0
-@export var attackRadius : float = 500.0
-@export var attackCooldown : float = 3.0
+var ENEMYTYPE : String = ""
 
-@export var maxWanderDistance : int = 250
+var maxHealth : float = 100.0
+var health : float = maxHealth
+var moveSpeed : float = 50.0
+var chaseSpeed : float = 100.0
+var attackSpeed : float = 1000.0
+var attackRadius : float = 500.0
+var attackCooldown : float = 3.0
+var maxWanderDistance : int = 250
 
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
 var wanderPoint = null
@@ -27,27 +28,30 @@ var state : String = "idle"
 var canAttack : bool = true
 
 var attackDict = {
-	"lunge" : [500.0, 3.0],
-	"stationary" : [100.0, 0.25]
+	"Lunge" : [500.0, 3.0],
+	"Stationary" : [100.0, 0.25]
 }
 
 var attackMethod : String = ""
-var attackMethods = ["stationary", "lunge"]
+var attackMethods = ["Stationary", "Lunge"]
+
+#INSTANTIATION --------------------------------------------------------------------------------------
 
 func _ready():
 	wanderPoint = targetPointScene.instantiate()
 	attackPoint = targetPointScene.instantiate()
 	get_tree().root.call_deferred("add_child", wanderPoint)
 	get_tree().root.call_deferred("add_child", attackPoint)
+	
 	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
 	attackRadius = attackDict[attackMethod][0]
 	attackCooldown = attackDict[attackMethod][1]
 	
-	print(attackMethod)
-	
 	stateRandomiser()
 
-func _physics_process(delta):	
+#PHYSICS PROCESS -----------------------------------------------------------------------------------
+
+func _physics_process(delta):
 	if target == null:
 		return
 	
@@ -58,7 +62,7 @@ func _physics_process(delta):
 	
 	if direction.length() < 10 and state == "attacking":
 		target = null
-		SpriteManager.finishAttack()
+		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	if direction.length() < 5 and state != "chasing" and state != "attacking":
 		target = null
@@ -67,6 +71,37 @@ func _physics_process(delta):
 	
 	velocity = direction.normalized() * speed
 	move_and_slide()
+
+#ATTACK FUNCTIONS ----------------------------------------------------------------------------------
+
+func attack():
+	canAttack = false
+	state = "attacking"
+	if attackMethod == "Lunge":
+		SpriteManager.chargeLunge(ENEMYTYPE)
+	
+	elif attackMethod == "Stationary":
+		stationaryAttack()
+		SpriteManager.attack("StationaryAttack", ENEMYTYPE)
+
+func lungeAttack():
+	SpriteManager.attack("LungeAttack", ENEMYTYPE)
+	speed = attackSpeed
+	attackPoint.global_position = player.global_position
+	target = attackPoint
+
+func stationaryAttack():
+	target = null
+
+#DAMAGE AND DEATH FUNCTIONS ------------------------------------------------------------------------
+
+func damage(attackName):
+	#take off health here and whatnot
+	#then call on sprite manager to do animation
+	state = "hurt"
+	SpriteManager.damage(ENEMYTYPE)
+
+#BEHAVIOUR FUNCTIONS -----------------------------------------------------------------------------
 
 func stateRandomiser():
 	if state == "hurt" or state == "chasing" or state == "attacking":
@@ -81,66 +116,43 @@ func stateRandomiser():
 	elif state == "wandering":
 		wander()
 
-func attack():
-	canAttack = false
-	state = "attacking"
-	if attackMethod == "lunge":
-		lungeAttack()
-	elif attackMethod == "stationary":
-		stationaryAttack()
-	SpriteManager.attack(attackMethod + "Attack")
-
-func lungeAttack():
-	speed = attackSpeed
-	attackPoint.global_position = player.global_position
-	target = attackPoint
-
-func stationaryAttack():
-	target = null
-
-func damage(attackName):
-	#take off health here and whatnot
-	#then call on sprite manager to do animation
-	state = "hurt"
-	SpriteManager.damage()
-
 func chasePlayer():
 	speed = chaseSpeed
 	state = "chasing"
 	target = player
-	SpriteManager.chase()
+	SpriteManager.chase(ENEMYTYPE)
 
 func idle():
-	SpriteManager.idle()
+	SpriteManager.idle(ENEMYTYPE)
 
 func wander():
 	speed = moveSpeed
-	SpriteManager.wander()
+	SpriteManager.wander(ENEMYTYPE)
 	wanderPoint.global_position = global_position + Vector2(randi_range(-maxWanderDistance, maxWanderDistance), randi_range(-maxWanderDistance, maxWanderDistance))
 	target = wanderPoint
 
-func _on_object_detection_area_entered(area):
-	if area.is_in_group("Player") and area.is_in_group("Detectable"):
-		player = area.get_parent().player
+func resetFocus():
+	if player == null:
+		stateRandomiser()
+	else:
 		chasePlayer()
 
+func cooldownAttack():
+	await get_tree().create_timer(attackCooldown).timeout
+	canAttack = true
 
-func _on_object_detection_area_exited(area):
-	if area.is_in_group("Player") and area.is_in_group("Detectable"):
-		player = null
-		state = "idle"
-		stateRandomiser()
-
+#ANIMATION STATE MACHINE probably could've used an animation tree but oh well ------------------------------------------------
 
 func _on_full_ap_animation_finished(anim_name):
-	if anim_name.find("FinishAttack") != -1 or anim_name.find("Hurt") != -1:
-		if player == null:
-			stateRandomiser()
-		else:
-			chasePlayer()
-	elif anim_name.find("Attack") != -1 and attackMethod != "lunge":
+	if anim_name.find("Hurt") != -1:
+		resetFocus()
+	
+	elif anim_name.find("FinishAttack") != -1:
+		resetFocus()
+		cooldownAttack()
+	
+	elif anim_name.find("StationaryAttack") != -1:
 		SpriteManager.finishAttack()
 	
-	if anim_name.find("FinishAttack") != -1:
-		await get_tree().create_timer(attackCooldown).timeout
-		canAttack = true
+	elif anim_name.find("LungeChargeup") != -1:
+		lungeAttack()

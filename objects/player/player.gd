@@ -8,7 +8,7 @@ extends CharacterBody2D
 @export var lungeSpeed : float = 50.0
 @export var lungeDuration : float = 0.1
 
-@export var dodgeSpeed : float = 500.0
+@export var dodgeSpeed : float = 750.0
 @export var dodgeDuration : float = 0.25
 @export var dodgeCooldown : float = 0.25
 

@@ -9,8 +9,11 @@ extends Node2D
 func damage():
 	FullAP.play("Hurt")
 
-func attack():
+func attack(attackMethod):
 	FullAP.play("Attack")
+
+func finishAttack():
+	FullAP.play("FinishAttack")
 
 func chase():
 	pass

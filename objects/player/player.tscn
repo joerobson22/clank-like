@@ -8,20 +8,20 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_vuiuc"]
 radius = 64.0312
 
-[sub_resource type="Animation" id="Animation_dptcb"]
-resource_name = "SwordBasicAttack1_STRAIGHT"
-
-[sub_resource type="Animation" id="Animation_hd0nm"]
-resource_name = "SwordBasicAttack1_STRAIGHTUP"
-
-[sub_resource type="Animation" id="Animation_orglr"]
-resource_name = "SwordBasicAttack1_STRAIGHTDOWN"
+[sub_resource type="Animation" id="Animation_7nak5"]
+resource_name = "SwordBasicAttack1_DIAGONALDOWN"
 
 [sub_resource type="Animation" id="Animation_2bxd4"]
 resource_name = "SwordBasicAttack1_DIAGONALUP"
 
-[sub_resource type="Animation" id="Animation_7nak5"]
-resource_name = "SwordBasicAttack1_DIAGONALDOWN"
+[sub_resource type="Animation" id="Animation_dptcb"]
+resource_name = "SwordBasicAttack1_STRAIGHT"
+
+[sub_resource type="Animation" id="Animation_orglr"]
+resource_name = "SwordBasicAttack1_STRAIGHTDOWN"
+
+[sub_resource type="Animation" id="Animation_hd0nm"]
+resource_name = "SwordBasicAttack1_STRAIGHTUP"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ixi0k"]
 _data = {

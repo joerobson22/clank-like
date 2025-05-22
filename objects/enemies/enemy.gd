@@ -21,6 +21,8 @@ var health : float = maxHealth
 @export var attackSpeed : float
 @export var attackRange : float
 @export var attackCooldown : float
+@export var attackOvershoot : float
+@export var attackSpeedDampen : float
 #behaviour
 @export var minWait : float
 @export var maxWait : float
@@ -94,12 +96,16 @@ func _physics_process(delta):
 		attack()
 	
 	#if we are attacking with a LUNGE and we are close to our target point, end the lunge
-	if direction.length() < 50 and attackState == "lunge":
+	if direction.length() < attackSpeed / 5 and attackState == "lunge":
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	#if we are fleeing, we want to flee until the min flee distance is met, then reset our focus
 	if state == "flee" and direction.length() > minFleeDistance:
 		resetFocus()
+	
+	#if we are lunging, set the speed to dampen when you get closer
+	if attackState == "lunge":
+		speed = max(speed * attackSpeedDampen, attackSpeed / 2)
 	
 	velocity = direction.normalized() * speed
 	move_and_slide()
@@ -134,8 +140,20 @@ func lungeAttack():
 	attackState = "lunge"
 	SpriteManager.attack("LungeAttack", ENEMYTYPE)
 	speed = attackSpeed
-	attackPoint.global_position = target.global_position
+	calculateAttackPointPosition()
+
+func calculateAttackPointPosition():
+	var directionVector = target.global_position - global_position
+	directionVector = maxVector((directionVector * attackOvershoot), Vector2(250, 250))
+	print(directionVector)
+	attackPoint.global_position = target.global_position + directionVector
 	target = attackPoint
+
+func maxVector(v1, v2) -> Vector2:
+	if v1.length() > v2.length():
+		return v1
+	else:
+		return v2
 
 func stationaryAttack():
 	SpriteManager.attack("StationaryAttack", ENEMYTYPE)

@@ -15,6 +15,8 @@ size = Vector2(173, 2918)
 
 [node name="Enemy" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-914, 391)
+attackOvershoot = 1.25
+attackSpeedDampen = 0.98
 
 [node name="Border" type="StaticBody2D" parent="."]
 collision_layer = 7

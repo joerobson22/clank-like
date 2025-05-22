@@ -3,28 +3,29 @@ extends CharacterBody2D
 #CHILDREN
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
+@onready var SetupManager = $SetupManager
 
 #ENEMY TYPE
 var ENEMYTYPE : String = ""
 
 #ENEMY ATTRIBUTES
 #health
-var maxHealth : float = 100.0
+@export var maxHealth : float = 100.0
 var health : float = maxHealth
 #movement
-var moveSpeed : float = 150.0
-var chaseSpeed : float = 200.0
-var fleeSpeed : float = -300.0
-var maxWanderDistance : int = 500
+@export var wanderSpeed : float
+@export var chaseSpeed : float
+@export var fleeSpeed : float
+@export var maxWanderDistance : int
 #attack information
-var attackSpeed : float
-var attackRange : float
-var attackCooldown : float
+@export var attackSpeed : float
+@export var attackRange : float
+@export var attackCooldown : float
 #behaviour
-var minWait : float = 0.25
-var maxWait : float = 3.0
-var willBackOff : bool = true
-var minFleeDistance : float = 750.0
+@export var minWait : float
+@export var maxWait : float
+@export var willBackOff : bool
+@export var minFleeDistance : float
 
 #TARGET POINTS
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
@@ -44,14 +45,6 @@ var statePool = ["idle", "wandering"]
 var state : String = "idle"
 var canAttack : bool = true
 
-#RECORDS FOR ATTRIBUTES DEPENDENT ON ATTACK TYPE
-var attackDict = {
-			# 		range  	cooldown  	speed
-	"Lunge" : [		500.0, 	3.0, 		1000.0],
-	"Stationary" : [100.0, 	0.25, 		0.0],
-	"Ranged" : [	1000.0,	5.0,		1000.0]
-}
-
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
@@ -60,16 +53,13 @@ var attackMethods = ["Ranged", "Lunge", "Stationary"]
 #INSTANTIATION --------------------------------------------------------------------------------------
 
 func _ready():
+	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
+	SetupManager.setup(attackMethod)
+	
 	wanderPoint = targetPointScene.instantiate()
 	attackPoint = targetPointScene.instantiate()
 	get_tree().root.call_deferred("add_child", wanderPoint)
 	get_tree().root.call_deferred("add_child", attackPoint)
-	
-	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
-	var attackInfo = attackDict[attackMethod]
-	attackRange = attackInfo[0]
-	attackCooldown = attackInfo[1]
-	attackSpeed = attackInfo[2]
 	
 	stateRandomiser()
 
@@ -157,21 +147,19 @@ func spawnProjectile(direction):
 func damage(attackName):
 	#take off health here and whatnot
 	#then call on sprite manager to do animation
-	state = "hurt"
-	canAttack = true
 	SpriteManager.damage(ENEMYTYPE)
 
 #BEHAVIOUR FUNCTIONS -----------------------------------------------------------------------------
 
 func stateRandomiser():
-	if state == "hurt" or state == "chasing" or state == "attacking":
+	if state == "chasing" or state == "attacking":
 		return
 	
+	await get_tree().create_timer(randf_range(minWait, maxWait)).timeout
 	state = statePool[randi_range(0, statePool.size() - 1)]
 	
 	if state == "idle":
 		idle()
-		await get_tree().create_timer(randf_range(minWait, maxWait)).timeout
 		stateRandomiser()
 	elif state == "wandering":
 		wander()
@@ -189,7 +177,7 @@ func idle():
 	SpriteManager.idle(ENEMYTYPE)
 
 func wander():
-	speed = moveSpeed
+	speed = wanderSpeed
 	SpriteManager.wander(ENEMYTYPE)
 	var valid : bool = false
 	while !valid:
@@ -220,11 +208,9 @@ func inBounds(x, y) -> bool:
 
 #ANIMATION STATE MACHINE probably could've used an animation tree but oh well ------------------------------------------------
 
-func _on_full_ap_animation_finished(anim_name):
-	if anim_name.find("Hurt") != -1:
-		resetFocus()
-	
-	elif anim_name.find("FinishAttack") != -1:
+func _on_full_ap_animation_finished(anim_name):	
+	if anim_name.find("FinishAttack") != -1:
+		SpriteManager.RESET()
 		cooldownAttack()
 	
 	elif anim_name.find("StationaryAttack") != -1 or anim_name.find("RangedAttack") != -1:

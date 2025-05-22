@@ -6,14 +6,14 @@ extends CharacterBody2D
 
 #ATTRIBUTES
 #moving
-@export var moveSpeed : float = 250.0
+@export var moveSpeed : float = 300.0
 #lunging
 @export var lungeSpeed : float = 50.0
 @export var lungeDuration : float = 0.1
 #dodging
-@export var dodgeSpeed : float = 750.0
+@export var dodgeSpeed : float = 1000.0
 @export var dodgeDuration : float = 0.25
-@export var dodgeCooldown : float = 0.25
+@export var dodgeCooldown : float = 0.1
 
 #ATTACK INFORMATION
 var attackNum = 1

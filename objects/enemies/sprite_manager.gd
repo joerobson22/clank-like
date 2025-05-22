@@ -6,8 +6,11 @@ extends Node2D
 @onready var BodyAP = $Body/BodyAP
 @onready var ExtraAP = $Extras/ExtraAP
 
+func RESET():
+	FullAP.play("RESET")
+
 func damage(ENEMYTYPE):
-	FullAP.play(ENEMYTYPE + "Hurt")
+	BodyAP.play(ENEMYTYPE + "Hurt")
 
 func chargeLunge(ENEMYTYPE):
 	FullAP.play(ENEMYTYPE + "LungeChargeup")

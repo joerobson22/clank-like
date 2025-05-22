@@ -15,10 +15,15 @@ run/main_scene="res://scenes/testing/testing_arena.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://assets/misc/icon.svg"
 
+[autoload]
+
+Global="*res://global/global.tscn"
+
 [file_customization]
 
 folder_colors={
 "res://assets/": "red",
+"res://global/": "orange",
 "res://objects/": "teal",
 "res://scenes/": "blue"
 }

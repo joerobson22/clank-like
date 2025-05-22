@@ -14,6 +14,11 @@ func attack(attackNum):
 	WeaponAP.play(fullAttackString)
 	BodyAP.play(fullAttackString)
 
+func die():
+	BodyAP.stop()
+	WeaponAP.stop()
+	FullAP.play("Die")
+
 func getDirection(inputVector : Vector2) -> String:
 	var newDirection = ""
 	if inputVector.x != 0 and inputVector.y != 0:

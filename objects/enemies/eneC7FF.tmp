@@ -334,17 +334,18 @@ _data = {
 "StationaryAttack": SubResource("Animation_lsmra")
 }
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_r3thq"]
-radius = 1.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_if6el"]
+resource_local_to_scene = true
+radius = 750.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_uucyq"]
-radius = 1.0
+radius = 1250.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_doyfs"]
-radius = 1.0
+radius = 60.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_17gkx"]
-radius = 1.0
+radius = 66.0076
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_afwpu"]
 radius = 66.3702
@@ -522,50 +523,50 @@ tracks/13/keys = {
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("../InteractionManager/ObjectDetection:scale")
+tracks/14/path = NodePath("..:objectDetectionRadius")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(750, 750)]
+"values": [750.0]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("../InteractionManager/ForgetRadius:scale")
+tracks/15/path = NodePath("..:forgetRadius")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(900, 900)]
+"values": [900.0]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("../InteractionManager/Hitbox:scale")
+tracks/16/path = NodePath("..:hitboxRadius")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(70, 70)]
+"values": [60.0]
 }
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("../InteractionManager/Hurtbox:scale")
+tracks/17/path = NodePath("..:hurtboxRadius")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(75, 75)]
+"values": [50.0]
 }
 
 [sub_resource type="Animation" id="Animation_t07c6"]
@@ -741,98 +742,50 @@ tracks/13/keys = {
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("../InteractionManager/ObjectDetection/CollisionShape2D:shape:radius")
+tracks/14/path = NodePath("..:objectDetectionRadius")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
+"values": [750.0]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("../InteractionManager/ObjectDetection:scale")
+tracks/15/path = NodePath("..:forgetRadius")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1, 1)]
+"values": [900.0]
 }
 tracks/16/type = "value"
 tracks/16/imported = false
 tracks/16/enabled = true
-tracks/16/path = NodePath("../InteractionManager/ForgetRadius/CollisionShape2D:shape:radius")
+tracks/16/path = NodePath("..:hitboxRadius")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
+"values": [60.0]
 }
 tracks/17/type = "value"
 tracks/17/imported = false
 tracks/17/enabled = true
-tracks/17/path = NodePath("../InteractionManager/Hitbox/CollisionShape2D:shape:radius")
+tracks/17/path = NodePath("..:hurtboxRadius")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
-}
-tracks/18/type = "value"
-tracks/18/imported = false
-tracks/18/enabled = true
-tracks/18/path = NodePath("../InteractionManager/Hurtbox/CollisionShape2D:shape:radius")
-tracks/18/interp = 1
-tracks/18/loop_wrap = true
-tracks/18/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
-}
-tracks/19/type = "value"
-tracks/19/imported = false
-tracks/19/enabled = true
-tracks/19/path = NodePath("../InteractionManager/ForgetRadius:scale")
-tracks/19/interp = 1
-tracks/19/loop_wrap = true
-tracks/19/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(800, 800)]
-}
-tracks/20/type = "value"
-tracks/20/imported = false
-tracks/20/enabled = true
-tracks/20/path = NodePath("../InteractionManager/Hitbox:scale")
-tracks/20/interp = 1
-tracks/20/loop_wrap = true
-tracks/20/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(70, 70)]
-}
-tracks/21/type = "value"
-tracks/21/imported = false
-tracks/21/enabled = true
-tracks/21/path = NodePath("../InteractionManager/Hurtbox:scale")
-tracks/21/interp = 1
-tracks/21/loop_wrap = true
-tracks/21/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(75, 75)]
+"values": [50.0]
 }
 
 [sub_resource type="Animation" id="Animation_mx0lj"]
@@ -984,50 +937,50 @@ tracks/11/keys = {
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("../InteractionManager/ObjectDetection:scale")
+tracks/12/path = NodePath("..:objectDetectionRadius")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1250, 1250)]
+"values": [1250.0]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("../InteractionManager/ForgetRadius:scale")
+tracks/13/path = NodePath("..:forgetRadius")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1300, 1300)]
+"values": [1500.0]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("../InteractionManager/Hitbox:scale")
+tracks/14/path = NodePath("..:hitboxRadius")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1e-05, 1e-05)]
+"values": [0.0]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("../InteractionManager/Hurtbox:scale")
+tracks/15/path = NodePath("..:hurtboxRadius")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(75, 75)]
+"values": [50.0]
 }
 
 [sub_resource type="Animation" id="Animation_n0eg0"]
@@ -1179,50 +1132,50 @@ tracks/11/keys = {
 tracks/12/type = "value"
 tracks/12/imported = false
 tracks/12/enabled = true
-tracks/12/path = NodePath("../InteractionManager/ObjectDetection:scale")
+tracks/12/path = NodePath("..:objectDetectionRadius")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(900, 900)]
+"values": [1000.0]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("../InteractionManager/ForgetRadius:scale")
+tracks/13/path = NodePath("..:forgetRadius")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1000, 1000)]
+"values": [1100.0]
 }
 tracks/14/type = "value"
 tracks/14/imported = false
 tracks/14/enabled = true
-tracks/14/path = NodePath("../InteractionManager/Hitbox:scale")
+tracks/14/path = NodePath("..:hitboxRadius")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(200, 200)]
+"values": [200.0]
 }
 tracks/15/type = "value"
 tracks/15/imported = false
 tracks/15/enabled = true
-tracks/15/path = NodePath("../InteractionManager/Hurtbox:scale")
+tracks/15/path = NodePath("..:hurtboxRadius")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(75, 75)]
+"values": [50.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_41ss5"]
@@ -1250,9 +1203,12 @@ attackSpeedDampen = 0.98
 minWait = 1.0
 maxWait = 3.0
 minFleeDistance = 1000.0
+objectDetectionRadius = 750.0
+forgetRadius = 900.0
+hitboxRadius = 60.0
+hurtboxRadius = 50.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_x3adi")
 
 [node name="Healthbar" parent="." instance=ExtResource("6_qpj4p")]
@@ -1292,19 +1248,17 @@ script = ExtResource("4_kvpgo")
 visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ObjectDetection"]
-shape = SubResource("CircleShape2D_r3thq")
+shape = SubResource("CircleShape2D_if6el")
 debug_color = Color(0, 0.6, 0.701961, 0.2)
 
-[node name="ForgetRadius" type="Area2D" parent="InteractionManager" groups=["Enemy"]]
+[node name="ForgetRadius" type="Area2D" parent="InteractionManager"]
 visible = false
-scale = Vector2(800, 800)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ForgetRadius"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ForgetRadius" groups=["Enemy"]]
 shape = SubResource("CircleShape2D_uucyq")
 debug_color = Color(0, 0.6, 0.701961, 0.0862745)
 
 [node name="Hitbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hitbox"]]
-scale = Vector2(70, 70)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hitbox"]
 shape = SubResource("CircleShape2D_doyfs")
@@ -1312,7 +1266,6 @@ disabled = true
 
 [node name="Hurtbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hurtbox"]]
 visible = false
-scale = Vector2(75, 75)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hurtbox"]
 shape = SubResource("CircleShape2D_17gkx")

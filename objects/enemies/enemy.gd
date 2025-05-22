@@ -61,16 +61,21 @@ func _ready():
 	attackMethod = attackMethods[randi_range(0, attackMethods.size() - 1)]
 	SetupManager.setup(attackMethod)
 	
+	setupTargetPoints()
+	
+	Healthbar.setup(maxHealth, maxHealth, "Enemy")
+	
+	stateRandomiser()
+
+
+func setupTargetPoints():
 	wanderPoint = targetPointScene.instantiate()
 	attackPoint = targetPointScene.instantiate()
 	fleePoint = targetPointScene.instantiate()
 	get_tree().root.call_deferred("add_child", wanderPoint)
 	get_tree().root.call_deferred("add_child", attackPoint)
 	get_tree().root.call_deferred("add_child", fleePoint)
-	
-	Healthbar.setup(maxHealth, maxHealth, "Enemy")
-	
-	stateRandomiser()
+
 
 #PHYSICS PROCESS -----------------------------------------------------------------------------------
 
@@ -183,11 +188,18 @@ func spawnProjectile(direction):
 	newProjectile.targetGroup = "Player"
 	newProjectile.friendlyGroup = "Enemy"
 	newProjectile.global_position = global_position
+	newProjectile.damage = Global.enemyBaseDamageLookup[attackMethod]
 	
 	get_tree().root.call_deferred("add_child", newProjectile)
 	
 	await get_tree().process_frame
 	newProjectile.linear_velocity = direction * attackSpeed
+
+func damagePlayer(p):
+	p.damage(calculateDamage())
+
+func calculateDamage() -> float:
+	return Global.enemyBaseDamageLookup[attackMethod]
 
 #DAMAGE AND DEATH FUNCTIONS ------------------------------------------------------------------------
 

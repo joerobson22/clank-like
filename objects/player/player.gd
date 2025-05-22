@@ -39,6 +39,8 @@ var states = {
 	"invincible" : false
 }
 
+var dead : bool = false
+
 #PHYSICS INFORMATION
 var lastInputVector : Vector2 = Vector2.RIGHT
 var direction = "STRAIGHT"
@@ -53,6 +55,9 @@ func _ready():
 
 #PHYSICS PROCESS ------------------------------------------------------------------------------------
 func _physics_process(delta):
+	if dead:
+		return
+	
 	states["invincible"] = states["dodging"]
 	
 	if states["attacking"]:
@@ -113,7 +118,7 @@ func damageEnemies():
 	InteractionManager.cooldown()
 
 func calculateDamage() -> float:
-	var damage : float = Global.baseDamageLookup[weaponName][attackNum] * damageBuffs
+	var damage : float = Global.playerBaseDamageLookup[weaponName][attackNum] * damageBuffs
 	if randf_range(0.0, 1.0) <= critChance:
 		damage *= critMod
 	return damage
@@ -123,6 +128,13 @@ func calculateDamage() -> float:
 func damage(dam):
 	if isInvincible():
 		return
+	
+	if Healthbar.damage(dam):
+		die()
+
+func die():
+	dead = true
+	SpriteManager.die()
 
 #INTERACTIONS ------------------------------------------------------------------------------------
 func interact():

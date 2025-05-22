@@ -7,6 +7,9 @@ extends Node2D
 @onready var ExtraAP = $Extras/ExtraAP
 
 func RESET():
+	call_deferred("playReset")
+
+func playReset():
 	FullAP.play("RESET")
 
 func damage(ENEMYTYPE):

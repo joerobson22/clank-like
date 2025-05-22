@@ -8,7 +8,7 @@ var targetGroup : String
 var friendlyGroup : String
 
 var explosive : bool = false
-var damage : float = 10.0
+var damage : float
 
 func _ready():
 	#init dependent on the projectiletype

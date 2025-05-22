@@ -100,7 +100,7 @@ func _physics_process(delta):
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	#if we are fleeing, we want to flee until the min flee distance is met, then reset our focus
-	if state == "flee" and direction.length() > minFleeDistance:
+	if state == "flee" and direction.length() > minFleeDistance and minFleeDistance > 0:
 		resetFocus()
 	
 	#if we are lunging, set the speed to dampen when you get closer
@@ -245,8 +245,11 @@ func cooldownAttack():
 
 func flee():
 	state = "flee"
-	fleePoint.global_position = player.global_position
-	target = fleePoint
+	if attackMethod == "Stationary":
+		target = player
+	else:
+		fleePoint.global_position = player.global_position
+		target = fleePoint
 	speed = -fleeSpeed
 
 #USEFUL FUNCTIONS

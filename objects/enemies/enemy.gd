@@ -34,7 +34,7 @@ var targetPointScene = preload("res://objects/enemies/target_point.tscn")
 var wanderPoint = null
 var attackPoint = null
 var fleePoint = null
-var levelBounds = [Vector2(-2000, -1000), Vector2(2000, 1000)] 
+var levelBounds = [Vector2(-2000, -1300), Vector2(2000, 1300)] 
 
 #PHYSICS ATTRIBUTES
 var speed : float = 0.0
@@ -52,7 +52,7 @@ var canAttack : bool = true
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
-var attackMethods = ["Lunge"]
+var attackMethods = ["Stationary"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -124,6 +124,7 @@ func attack():
 		chargeLunge()
 	
 	elif attackMethod == "Stationary":
+		#perform a stationary attack
 		attackState = "stationary"
 		stationaryAttack()
 	
@@ -145,7 +146,6 @@ func lungeAttack():
 func calculateAttackPointPosition():
 	var directionVector = target.global_position - global_position
 	directionVector = maxVector((directionVector * attackOvershoot), Vector2(250, 250))
-	print(directionVector)
 	attackPoint.global_position = target.global_position + directionVector
 	target = attackPoint
 
@@ -207,10 +207,7 @@ func shouldChase() -> bool:
 	if attackState != "" or state == "flee":
 		return false
 	
-	if attackMethod == "Lunge":
-		return canAttack
-	else:
-		return true
+	return canAttack
 
 func chasePlayer():
 	speed = chaseSpeed

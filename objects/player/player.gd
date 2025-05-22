@@ -3,8 +3,12 @@ extends CharacterBody2D
 #CHILDREN
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
+@onready var Healthbar = $Healthbar
 
 #ATTRIBUTES
+#health
+@export var health : float
+@export var maxHealth : float = 100.0
 #moving
 @export var moveSpeed : float = 300.0
 #lunging
@@ -16,9 +20,13 @@ extends CharacterBody2D
 @export var dodgeCooldown : float = 0.1
 
 #ATTACK INFORMATION
-var attackNum = 1
-var numAttacks
 var weaponName = "Sword"
+var attackNum = 1
+var numAttacks# = Global.baseDamageLookup[weaponName].size() - 1
+
+@export var critChance : float = 0.1
+@export var critMod : float = 2.5
+@export var damageBuffs : float = 1.0
 
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
@@ -40,6 +48,8 @@ func _ready():
 	if weaponName == "Sword":
 		numAttacks = 1
 		#set sprite etc
+	health = maxHealth
+	Healthbar.setup(health, maxHealth, "Player")
 
 #PHYSICS PROCESS ------------------------------------------------------------------------------------
 func _physics_process(delta):
@@ -95,12 +105,18 @@ func attack():
 	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack")
 	#play attack animation
 	SpriteManager.attack(type_convert(attackNum, TYPE_STRING))
-	attackNum += 1
 
-func damageEnemies(attackName): #in the future, may also pass weapon, crit chance, other buffs
+func damageEnemies():
+	#calculate damage
 	for e in InteractionManager.enemyList:
-		e.damage(attackName)
+		e.damage(calculateDamage())
 	InteractionManager.cooldown()
+
+func calculateDamage() -> float:
+	var damage : float = Global.baseDamageLookup[weaponName][attackNum] * damageBuffs
+	if randf_range(0.0, 1.0) <= critChance:
+		damage *= critMod
+	return damage
 
 #HURTING -------------------------------------------------------------------------------------------
 

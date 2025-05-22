@@ -5,6 +5,7 @@
 [node name="TargetPoint" type="Node2D"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.75046, 0.000433562, 0.750455, 1)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_mj5o5")

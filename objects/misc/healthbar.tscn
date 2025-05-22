@@ -1,0 +1,129 @@
+[gd_scene load_steps=7 format=3 uid="uid://csohbe65cssag"]
+
+[ext_resource type="Texture2D" uid="uid://b847xpdbqi8ga" path="res://assets/objects/misc/progressbar.png" id="1_strha"]
+[ext_resource type="Script" path="res://objects/misc/progress_bar.gd" id="2_7ii8d"]
+
+[sub_resource type="Animation" id="Animation_6nu3m"]
+resource_name = "Player"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("OverBar:tint_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.462076, 0.712053, 0.35749, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UnderBar:tint_under")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.262932, 0.262932, 0.262932, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_g8b7b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("OverBar:tint_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("OverBar:tint_over")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("UnderBar:tint_under")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ju6k6"]
+resource_name = "Enemy"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("OverBar:tint_progress")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.906738, 0.497169, 0.491379, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UnderBar:tint_under")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.10748, 0.10748, 0.10748, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_belft"]
+_data = {
+"Enemy": SubResource("Animation_ju6k6"),
+"Player": SubResource("Animation_6nu3m"),
+"RESET": SubResource("Animation_g8b7b")
+}
+
+[node name="Healthbar" type="Node2D"]
+script = ExtResource("2_7ii8d")
+
+[node name="UnderBar" type="TextureProgressBar" parent="."]
+offset_left = -50.0
+offset_top = -7.0
+offset_right = 50.0
+offset_bottom = 8.0
+value = 50.0
+texture_under = ExtResource("1_strha")
+texture_progress = ExtResource("1_strha")
+
+[node name="OverBar" type="TextureProgressBar" parent="."]
+offset_left = -50.0
+offset_top = -7.0
+offset_right = 50.0
+offset_bottom = 8.0
+texture_progress = ExtResource("1_strha")
+tint_under = Color(0.215902, 0.215902, 0.215902, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_belft")
+}

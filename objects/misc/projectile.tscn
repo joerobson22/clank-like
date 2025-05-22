@@ -22,6 +22,7 @@ max_contacts_reported = 4
 script = ExtResource("1_0dwiu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_mkmb3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -30,6 +31,7 @@ scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_vpapg")
 
 [node name="Hitbox" type="Area2D" parent="." groups=["Hitbox"]]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("CircleShape2D_waeo3")

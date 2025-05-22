@@ -22,6 +22,7 @@ func setDirection(directionString):
 
 func cooldown():
 	var time = cooldownTime
+	player.attackNum += 1
 	if player.attackNum > player.numAttacks:
 		player.attackNum = 1
 		time = fullCooldownTime
@@ -34,7 +35,7 @@ func _on_hitbox_area_entered(area):
 			#print("added")
 			enemyList.append(area.get_parent().parent)
 	elif area.is_in_group("Player") and area.is_in_group("DamageActivator"):
-		player.damageEnemies(get_node("Hitbox/DamageActivator/AnimationPlayer").current_animation)
+		player.damageEnemies()
 
 func _on_hitbox_area_exited(area):
 	if area.is_in_group("Enemy") and area.is_in_group("Hurtbox"):

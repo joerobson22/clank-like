@@ -12,6 +12,11 @@ func RESET():
 func damage(ENEMYTYPE):
 	BodyAP.play(ENEMYTYPE + "Hurt")
 
+func die(ENEMYTYPE):
+	FullAP.stop()
+	ExtraAP.stop()
+	BodyAP.play(ENEMYTYPE + "Die")
+
 func chargeLunge(ENEMYTYPE):
 	FullAP.play(ENEMYTYPE + "LungeChargeup")
 

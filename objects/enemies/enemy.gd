@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var SpriteManager = $SpriteManager
 @onready var InteractionManager = $InteractionManager
 @onready var SetupManager = $SetupManager
+@onready var Healthbar = $Healthbar
 
 #ENEMY TYPE
 var ENEMYTYPE : String = ""
@@ -11,7 +12,6 @@ var ENEMYTYPE : String = ""
 #ENEMY ATTRIBUTES
 #health
 @export var maxHealth : float = 100.0
-var health : float = maxHealth
 #movement
 @export var wanderSpeed : float
 @export var chaseSpeed : float
@@ -44,6 +44,7 @@ var player = null
 var target = null
 
 #STATE MACHINE VARIABLES
+var dead : bool = false
 var statePool = ["idle", "wandering"]
 var state : String = "idle"
 var attackState : String = ""
@@ -67,6 +68,8 @@ func _ready():
 	get_tree().root.call_deferred("add_child", attackPoint)
 	get_tree().root.call_deferred("add_child", fleePoint)
 	
+	Healthbar.setup(maxHealth, maxHealth, "Enemy")
+	
 	stateRandomiser()
 
 #PHYSICS PROCESS -----------------------------------------------------------------------------------
@@ -76,6 +79,9 @@ func _process(delta):
 	$attack.text = attackState
 
 func _physics_process(delta):
+	if dead:
+		return
+	
 	#if player is not null, that means the player is in detection range
 	if player != null and shouldChase():
 		#therefore, if we should chase the player
@@ -185,10 +191,14 @@ func spawnProjectile(direction):
 
 #DAMAGE AND DEATH FUNCTIONS ------------------------------------------------------------------------
 
-func damage(attackName):
-	#take off health here and whatnot
-	#then call on sprite manager to do animation
+func damage(damage):
 	SpriteManager.damage(ENEMYTYPE)
+	if Healthbar.damage(damage):
+		die()
+
+func die():
+	dead = true
+	SpriteManager.die(ENEMYTYPE)
 
 #BEHAVIOUR FUNCTIONS -----------------------------------------------------------------------------
 
@@ -273,6 +283,9 @@ func _on_full_ap_animation_finished(anim_name):
 	
 	elif anim_name.find("RangedChargeup") != -1:
 		rangedAttack()
+	
+	elif anim_name.find("Die") != -1:
+		queue_free()
 
 func isInvincible() -> bool:
 	return false

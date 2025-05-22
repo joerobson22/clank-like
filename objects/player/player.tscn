@@ -1,9 +1,10 @@
-[gd_scene load_steps=33 format=3 uid="uid://e3nvmpgb71ya"]
+[gd_scene load_steps=34 format=3 uid="uid://e3nvmpgb71ya"]
 
 [ext_resource type="Texture2D" uid="uid://b1lrvqctoge3o" path="res://assets/misc/icon.svg" id="1_is1l8"]
 [ext_resource type="Script" path="res://objects/player/player.gd" id="1_j1ilj"]
 [ext_resource type="Script" path="res://objects/player/sprite_manager.gd" id="2_qm8pq"]
 [ext_resource type="Script" path="res://objects/player/interaction_manager.gd" id="4_gt2mc"]
+[ext_resource type="PackedScene" uid="uid://csohbe65cssag" path="res://objects/misc/healthbar.tscn" id="5_t2x18"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vuiuc"]
 radius = 64.0312
@@ -376,7 +377,12 @@ collision_mask = 4
 script = ExtResource("1_j1ilj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CircleShape2D_vuiuc")
+
+[node name="Healthbar" parent="." instance=ExtResource("5_t2x18")]
+position = Vector2(0, -95)
+scale = Vector2(2, 2)
 
 [node name="SpriteManager" type="Node2D" parent="."]
 script = ExtResource("2_qm8pq")
@@ -445,7 +451,7 @@ visible = false
 shape = SubResource("CircleShape2D_pbsry")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.25, 0.25)
+zoom = Vector2(0.5, 0.5)
 
 [connection signal="animation_finished" from="SpriteManager/Body/BodyAP" to="SpriteManager" method="_on_body_ap_animation_finished"]
 [connection signal="animation_finished" from="SpriteManager/Weapon/WeaponAP" to="SpriteManager" method="_on_weapon_ap_animation_finished"]

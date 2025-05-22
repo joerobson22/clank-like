@@ -13,8 +13,29 @@ size = Vector2(173, 2918)
 
 [node name="Player" parent="." instance=ExtResource("1_pmf8e")]
 
-[node name="Enemy" parent="." instance=ExtResource("2_0pkbm")]
+[node name="Enemy1" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-914, 391)
+
+[node name="Enemy2" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(686, 948)
+
+[node name="Enemy3" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1603, 582)
+
+[node name="Enemy4" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1639, -599)
+
+[node name="Enemy5" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(620, -869)
+
+[node name="Enemy6" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1819, -773)
+
+[node name="Enemy7" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1891, 983)
+
+[node name="Enemy8" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1891, 983)
 
 [node name="Border" type="StaticBody2D" parent="."]
 collision_layer = 7

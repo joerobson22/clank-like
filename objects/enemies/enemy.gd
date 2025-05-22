@@ -52,7 +52,7 @@ var canAttack : bool = true
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
-var attackMethods = ["Ranged"]
+var attackMethods = ["Lunge", "Stationary", "Ranged"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 

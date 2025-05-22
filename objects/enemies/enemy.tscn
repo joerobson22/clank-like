@@ -1286,17 +1286,16 @@ libraries = {
 }
 
 [node name="InteractionManager" type="Node2D" parent="."]
+visible = false
 script = ExtResource("4_kvpgo")
 
 [node name="ObjectDetection" type="Area2D" parent="InteractionManager" groups=["Detector", "Enemy"]]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ObjectDetection"]
 shape = SubResource("CircleShape2D_r3thq")
 debug_color = Color(0, 0.6, 0.701961, 0.2)
 
 [node name="ForgetRadius" type="Area2D" parent="InteractionManager" groups=["Enemy"]]
-visible = false
 scale = Vector2(800, 800)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/ForgetRadius"]
@@ -1311,14 +1310,12 @@ shape = SubResource("CircleShape2D_doyfs")
 disabled = true
 
 [node name="Hurtbox" type="Area2D" parent="InteractionManager" groups=["Enemy", "Hurtbox"]]
-visible = false
 scale = Vector2(75, 75)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Hurtbox"]
 shape = SubResource("CircleShape2D_17gkx")
 
 [node name="Detectable" type="Area2D" parent="InteractionManager" groups=["Detectable", "Enemy"]]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionManager/Detectable"]
 shape = SubResource("CircleShape2D_afwpu")

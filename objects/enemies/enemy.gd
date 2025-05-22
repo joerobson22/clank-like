@@ -52,7 +52,7 @@ var canAttack : bool = true
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
-var attackMethods = ["Stationary"]
+var attackMethods = ["Ranged"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -129,6 +129,7 @@ func attack():
 		stationaryAttack()
 	
 	elif attackMethod == "Ranged":
+		#shoot at the player
 		attackState = "ranged"
 		chargeRanged()
 

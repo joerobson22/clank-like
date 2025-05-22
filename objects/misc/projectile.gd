@@ -30,5 +30,8 @@ func _on_hitbox_area_entered(area):
 func _on_body_entered(body):
 	if body.is_in_group(targetGroup):
 		damageTarget(body)
-	if !body.isInvincible():
+	if body.get_script() != null:
+		if !body.isInvincible():
+			deleteProjectile()
+	else:
 		deleteProjectile()

@@ -1,41 +1,37 @@
-[gd_scene load_steps=3 format=3 uid="uid://cakfwh0wl6g7t"]
+[gd_scene load_steps=5 format=3 uid="uid://cakfwh0wl6g7t"]
 
 [ext_resource type="PackedScene" uid="uid://e3nvmpgb71ya" path="res://objects/player/player.tscn" id="1_pmf8e"]
 [ext_resource type="PackedScene" uid="uid://b8a7grgok21vr" path="res://objects/enemies/enemy.tscn" id="2_0pkbm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k5stm"]
+size = Vector2(4627, 104)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p53j6"]
+size = Vector2(173, 2918)
 
 [node name="TestingArena" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_pmf8e")]
 
 [node name="Enemy" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-1010, -448)
+position = Vector2(-914, 391)
 
-[node name="Enemy2" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(993, 486)
+[node name="Border" type="StaticBody2D" parent="."]
+collision_layer = 7
+collision_mask = 7
 
-[node name="Enemy3" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-972, 503)
+[node name="Top" type="CollisionShape2D" parent="Border"]
+position = Vector2(-4, -1416)
+shape = SubResource("RectangleShape2D_k5stm")
 
-[node name="Enemy4" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(927, -414)
+[node name="Bottom" type="CollisionShape2D" parent="Border"]
+position = Vector2(8, 1395)
+shape = SubResource("RectangleShape2D_k5stm")
 
-[node name="Enemy5" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(470, -481)
+[node name="Left" type="CollisionShape2D" parent="Border"]
+position = Vector2(-2231, -3)
+shape = SubResource("RectangleShape2D_p53j6")
 
-[node name="Enemy6" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(121, -478)
-
-[node name="Enemy7" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-466, -475)
-
-[node name="Enemy8" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-980, -2)
-
-[node name="Enemy9" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(-602, 484)
-
-[node name="Enemy10" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(125, 525)
-
-[node name="Enemy11" parent="." instance=ExtResource("2_0pkbm")]
-position = Vector2(954, 198)
+[node name="Right" type="CollisionShape2D" parent="Border"]
+position = Vector2(2312, -9)
+shape = SubResource("RectangleShape2D_p53j6")

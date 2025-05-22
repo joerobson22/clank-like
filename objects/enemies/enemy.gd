@@ -24,14 +24,15 @@ var health : float = maxHealth
 #behaviour
 @export var minWait : float
 @export var maxWait : float
-@export var willBackOff : bool
+@export var willFlee : bool
 @export var minFleeDistance : float
 
 #TARGET POINTS
 var targetPointScene = preload("res://objects/enemies/target_point.tscn")
 var wanderPoint = null
 var attackPoint = null
-var levelBounds = [Vector2(-1000, -1000), Vector2(1000, 1000)] 
+var fleePoint = null
+var levelBounds = [Vector2(-2000, -1000), Vector2(2000, 1000)] 
 
 #PHYSICS ATTRIBUTES
 var speed : float = 0.0
@@ -43,12 +44,13 @@ var target = null
 #STATE MACHINE VARIABLES
 var statePool = ["idle", "wandering"]
 var state : String = "idle"
+var attackState : String = ""
 var canAttack : bool = true
 
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
-var attackMethods = ["Ranged", "Lunge", "Stationary"]
+var attackMethods = ["Lunge"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -58,35 +60,45 @@ func _ready():
 	
 	wanderPoint = targetPointScene.instantiate()
 	attackPoint = targetPointScene.instantiate()
+	fleePoint = targetPointScene.instantiate()
 	get_tree().root.call_deferred("add_child", wanderPoint)
 	get_tree().root.call_deferred("add_child", attackPoint)
+	get_tree().root.call_deferred("add_child", fleePoint)
 	
 	stateRandomiser()
 
 #PHYSICS PROCESS -----------------------------------------------------------------------------------
 
+func _process(delta):
+	$state.text = state
+	$attack.text = attackState
+
 func _physics_process(delta):
+	#if player is not null, that means the player is in detection range
+	if player != null and shouldChase():
+		#therefore, if we should chase the player
+		chasePlayer()
+	
+	#if we don't have a target, don't move
 	if target == null:
 		return
 	
 	var direction = target.global_position - global_position
 	
-	if direction.length() < attackRange and state == "chasing" and canAttack:
+	#if we are close to our wander point, find another one
+	if direction.length() < 10 and state == "wandering":
+		stateRandomiser()
+	
+	#if we are in adequate range to attack and we can attack, attack!
+	if direction.length() < attackRange and shouldAttack():
 		attack()
 	
-	if attackMethod == "Ranged" and direction.length() < attackRange:
-		return
-	
-	if direction.length() < 10 and state == "attacking":
-		target = null
+	#if we are attacking with a LUNGE and we are close to our target point, end the lunge
+	if direction.length() < 50 and attackState == "lunge":
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
-	if direction.length() < 5 and state != "chasing" and state != "attacking" and state != "backing off":
-		target = null
-		stateRandomiser()
-		return
-	
-	if direction.length() > minFleeDistance and state == "backing off":
+	#if we are fleeing, we want to flee until the min flee distance is met, then reset our focus
+	if state == "flee" and direction.length() > minFleeDistance:
 		resetFocus()
 	
 	velocity = direction.normalized() * speed
@@ -94,25 +106,35 @@ func _physics_process(delta):
 
 #ATTACK FUNCTIONS ----------------------------------------------------------------------------------
 
+func shouldAttack() -> bool:
+	return (canAttack and attackState == "" and state == "chasing")
+
 func attack():
+	#once we have determined it's okay to attack
 	canAttack = false
-	state = "attacking"
+	
 	if attackMethod == "Lunge":
+		#charge up the lunge
 		chargeLunge()
 	
 	elif attackMethod == "Stationary":
+		attackState = "stationary"
 		stationaryAttack()
 	
 	elif attackMethod == "Ranged":
+		attackState = "ranged"
 		chargeRanged()
 
 func chargeLunge():
+	attackState = "charging"
+	speed = 0.1 * chaseSpeed
 	SpriteManager.chargeLunge(ENEMYTYPE)
 
 func lungeAttack():
+	attackState = "lunge"
 	SpriteManager.attack("LungeAttack", ENEMYTYPE)
 	speed = attackSpeed
-	attackPoint.global_position = player.global_position
+	attackPoint.global_position = target.global_position
 	target = attackPoint
 
 func stationaryAttack():
@@ -152,29 +174,37 @@ func damage(attackName):
 #BEHAVIOUR FUNCTIONS -----------------------------------------------------------------------------
 
 func stateRandomiser():
-	if state == "chasing" or state == "attacking":
+	if attackState != "":
 		return
 	
-	await get_tree().create_timer(randf_range(minWait, maxWait)).timeout
+	SpriteManager.RESET()
 	state = statePool[randi_range(0, statePool.size() - 1)]
 	
 	if state == "idle":
 		idle()
-		stateRandomiser()
 	elif state == "wandering":
 		wander()
 
-func chasePlayer():
-	if state == "attacking":
-		return
+func shouldChase() -> bool:
+	if attackState != "" or state == "flee":
+		return false
 	
+	if attackMethod == "Lunge":
+		return canAttack
+	else:
+		return true
+
+func chasePlayer():
 	speed = chaseSpeed
 	state = "chasing"
 	target = player
 	SpriteManager.chase(ENEMYTYPE)
 
 func idle():
+	target = null
 	SpriteManager.idle(ENEMYTYPE)
+	await get_tree().create_timer(randf_range(minWait, maxWait)).timeout
+	stateRandomiser()
 
 func wander():
 	speed = wanderSpeed
@@ -186,21 +216,23 @@ func wander():
 	target = wanderPoint
 
 func resetFocus():
-	if player == null:
-		stateRandomiser()
-	else:
-		chasePlayer()
+	stateRandomiser()
 
 func cooldownAttack():
-	if willBackOff:
-		state = "backing off"
-		target = player
-		speed = fleeSpeed
+	attackState = ""
+	if willFlee:
+		flee()
 	else:
 		resetFocus()
 	await get_tree().create_timer(attackCooldown).timeout
 	canAttack = true
 	resetFocus()
+
+func flee():
+	state = "flee"
+	fleePoint.global_position = player.global_position
+	target = fleePoint
+	speed = -fleeSpeed
 
 #USEFUL FUNCTIONS
 func inBounds(x, y) -> bool:
@@ -217,6 +249,7 @@ func _on_full_ap_animation_finished(anim_name):
 		SpriteManager.finishAttack(ENEMYTYPE)
 	
 	elif anim_name.find("LungeChargeup") != -1:
+		#once the lunge has been charged, lunge!
 		lungeAttack()
 	
 	elif anim_name.find("RangedChargeup") != -1:

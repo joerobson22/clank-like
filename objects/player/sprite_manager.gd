@@ -37,11 +37,8 @@ func _on_full_ap_animation_finished(anim_name):
 	pass
 
 func _on_weapon_ap_animation_finished(anim_name):
-	pass
-	#print(anim_name)
-	#if anim_name.find("Attack") != -1:
-	#	player.states["attacking"] = false
-	#	player.damageEnemies(anim_name)
+	if anim_name.find("Attack") != -1:
+		player.InteractionManager.cooldown()
 
 func _on_body_ap_animation_finished(anim_name):
 	pass # Replace with function body.

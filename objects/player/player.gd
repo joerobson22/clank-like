@@ -10,14 +10,19 @@ extends CharacterBody2D
 @export var health : float
 @export var maxHealth : float = 100.0
 #moving
-@export var moveSpeed : float = 300.0
+@export var moveSpeed : float = 500.0
 #lunging
-@export var lungeSpeed : float = 50.0
+@export var lungeSpeed : float = 800.0
 @export var lungeDuration : float = 0.1
+@export var lungeRecovery : float = 0.1
 #dodging
-@export var dodgeSpeed : float = 1000.0
+@export var dodgeSpeed : float = 1250.0
 @export var dodgeDuration : float = 0.25
-@export var dodgeCooldown : float = 0.1
+@export var dodgeCooldown : float = 0.2
+@export var dodgeRecovery : float = 0.05
+#attacking
+@export var cooldownTime : float = 0.1
+@export var fullCooldownTime : float = 0.2
 
 #ATTACK INFORMATION
 var weaponName = "Sword"
@@ -36,9 +41,11 @@ var states = {
 	"canAttack" : true,
 	"dodging" : false,
 	"canDodge" : true,
-	"invincible" : false
+	"invincible" : false,
+	"immobile": false
 }
 
+var canAttack : bool = true
 var dead : bool = false
 
 #PHYSICS INFORMATION
@@ -55,7 +62,7 @@ func _ready():
 
 #PHYSICS PROCESS ------------------------------------------------------------------------------------
 func _physics_process(delta):
-	if dead:
+	if dead or states["immobile"]:
 		return
 	
 	states["invincible"] = states["dodging"]
@@ -85,14 +92,14 @@ func motion(delta):
 		velocity = inputVector * moveSpeed
 		move_and_slide()
 	
-	if Input.is_action_just_pressed("space") and states["canDodge"]:
-		startDash(dodgeSpeed, dodgeDuration, dodgeCooldown, "dodging", "canDodge")
+	if Input.is_action_just_pressed("space") and states["canDodge"] and !states["immobile"]:
+		startDash(dodgeSpeed, dodgeDuration, dodgeCooldown, "dodging", "canDodge", dodgeRecovery)
 
 func dash(speed):
 	velocity = lastInputVector.normalized() * speed
 	move_and_slide()
 
-func startDash(speed, duration, cooldown, actionName, actionStatus):
+func startDash(speed, duration, cooldown, actionName, actionStatus, actionRecovery):
 	states[actionName] = true
 	states[actionStatus] = false
 	
@@ -101,13 +108,17 @@ func startDash(speed, duration, cooldown, actionName, actionStatus):
 	await get_tree().create_timer(duration).timeout
 	states[actionName] = false
 	
+	states["immobile"] = true
+	await get_tree().create_timer(actionRecovery).timeout
+	states["immobile"] = false
+	
 	await get_tree().create_timer(cooldown).timeout
 	states[actionStatus] = true
 
 #ATTACKING ------------------------------------------------------------------------------------
 
 func attack():
-	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack")
+	startDash(lungeSpeed, lungeDuration, 0.0, "attacking", "canAttack", lungeRecovery)
 	#play attack animation
 	SpriteManager.attack(type_convert(attackNum, TYPE_STRING))
 

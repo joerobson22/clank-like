@@ -35,24 +35,51 @@ shape = SubResource("RectangleShape2D_p53j6")
 
 [node name="Enemy" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-1395, -581)
-minLungeDistance = 250.0
 
 [node name="Enemy2" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-1917, 851)
-minLungeDistance = 250.0
 
 [node name="Enemy3" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(1302, 875)
-minLungeDistance = 250.0
 
 [node name="Enemy4" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(1128, -527)
-minLungeDistance = 250.0
 
 [node name="Enemy5" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-466, 923)
-minLungeDistance = 250.0
 
 [node name="Enemy6" parent="." instance=ExtResource("2_0pkbm")]
 position = Vector2(-185, -725)
-minLungeDistance = 250.0
+
+[node name="Enemy7" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(420, -821)
+
+[node name="Enemy8" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1445, -929)
+
+[node name="Enemy9" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-868, -959)
+
+[node name="Enemy10" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1887, -426)
+
+[node name="Enemy11" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1911, 269)
+
+[node name="Enemy12" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(594, 994)
+
+[node name="Enemy13" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1769, 652)
+
+[node name="Enemy14" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1817, -67)
+
+[node name="Enemy15" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(1847, -630)
+
+[node name="Enemy16" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1263, 964)
+
+[node name="Enemy17" parent="." instance=ExtResource("2_0pkbm")]
+position = Vector2(-1742, -1002)

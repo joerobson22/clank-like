@@ -5,14 +5,10 @@ extends Node2D
 
 var enemyList = []
 
-var cooldownTime : float = 0.1
-var fullCooldownTime : float = 0.25
-var canAttack : bool = true
-
 func _process(delta):
-	if Input.is_action_just_released("attack") and canAttack:
+	if Input.is_action_just_released("attack") and player.canAttack:
 		player.attack()
-		canAttack = false
+		player.canAttack = false
 	
 	if Input.is_action_just_released("interact"):
 		player.interact()
@@ -21,13 +17,13 @@ func setDirection(directionString):
 	DirectionAP.play(directionString)
 
 func cooldown():
-	var time = cooldownTime
+	var time = player.cooldownTime
 	player.attackNum += 1
 	if player.attackNum > player.numAttacks:
 		player.attackNum = 1
-		time = fullCooldownTime
+		time = player.fullCooldownTime
 	await get_tree().create_timer(time).timeout
-	canAttack = true
+	player.canAttack = true
 
 func _on_hitbox_area_entered(area):
 	if area.is_in_group("Enemy") and area.is_in_group("Hurtbox"):

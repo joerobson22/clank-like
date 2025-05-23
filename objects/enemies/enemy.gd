@@ -22,6 +22,7 @@ var ENEMYTYPE : String = ""
 @export var attackRange : float
 @export var attackCooldown : float
 @export var attackOvershoot : float
+@export var minLungeDistance : float
 @export var attackSpeedDampen : float
 #behaviour
 @export var minWait : float
@@ -42,6 +43,7 @@ var speed : float = 0.0
 #NODE REFERENCES
 var player = null
 var target = null
+var rangedTarget = null
 
 #STATE MACHINE VARIABLES
 var dead : bool = false
@@ -53,7 +55,7 @@ var canAttack : bool = true
 var projectileScene = preload("res://objects/misc/projectile.tscn")
 
 var attackMethod : String = ""
-var attackMethods = ["Lunge", "Stationary", "Ranged"]
+var attackMethods = ["Lunge", "Ranged"]
 
 #INSTANTIATION --------------------------------------------------------------------------------------
 
@@ -142,6 +144,7 @@ func attack():
 	elif attackMethod == "Ranged":
 		#shoot at the player
 		attackState = "ranged"
+		rangedTarget = target
 		chargeRanged()
 
 func chargeLunge():
@@ -157,7 +160,7 @@ func lungeAttack():
 
 func calculateAttackPointPosition():
 	var directionVector = target.global_position - global_position
-	directionVector = maxVector((directionVector * attackOvershoot), Vector2(250, 250))
+	directionVector = maxVector((directionVector * attackOvershoot), (directionVector * attackOvershoot).normalized() * minLungeDistance)
 	attackPoint.global_position = target.global_position + directionVector
 	target = attackPoint
 
@@ -176,11 +179,8 @@ func chargeRanged():
 	SpriteManager.chargeRanged(ENEMYTYPE)
 
 func rangedAttack():
-	if player == null:
-		resetFocus()
-		return
 	SpriteManager.attack("RangedAttack", ENEMYTYPE)
-	var direction : Vector2 = (player.global_position - global_position).normalized()
+	var direction : Vector2 = (rangedTarget.global_position - global_position).normalized()
 	spawnProjectile(direction)
 
 func spawnProjectile(direction):
@@ -254,7 +254,10 @@ func wander():
 	target = wanderPoint
 
 func resetFocus():
-	stateRandomiser()
+	if player != null and canAttack:
+		chasePlayer()
+	else:
+		stateRandomiser()
 
 func cooldownAttack():
 	attackState = ""
@@ -271,7 +274,10 @@ func flee():
 	if attackMethod == "Stationary":
 		target = player
 	else:
-		fleePoint.global_position = player.global_position
+		if player == null:
+			fleePoint.global_position = global_position
+		else:
+			fleePoint.global_position = player.global_position
 		target = fleePoint
 	speed = -fleeSpeed
 

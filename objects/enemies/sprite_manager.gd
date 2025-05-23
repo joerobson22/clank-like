@@ -16,11 +16,11 @@ func damage(ENEMYTYPE):
 	BodyAP.play(ENEMYTYPE + "Hurt")
 
 func die(ENEMYTYPE):
-	FullAP.stop()
-	ExtraAP.stop()
 	call_deferred("playDeathAnimation", ENEMYTYPE)
 
 func playDeathAnimation(ENEMYTYPE):
+	FullAP.stop()
+	ExtraAP.stop()
 	BodyAP.play(ENEMYTYPE + "Die")
 
 func chargeLunge(ENEMYTYPE):
